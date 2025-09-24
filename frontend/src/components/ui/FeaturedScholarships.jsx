@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "../ui/Button";
 
 const FeaturedScholarships = () => {
   const scholarships = [
@@ -24,7 +25,7 @@ const FeaturedScholarships = () => {
       <div className="container mx-auto px-6">
         {/* Section Heading */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-green-700">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-blue-700">
             Featured Scholarships
           </h2>
           <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
@@ -38,15 +39,15 @@ const FeaturedScholarships = () => {
           {scholarships.map((scholarship) => (
             <div
               key={scholarship.id}
-              className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition border-t-4 border-green-600"
+              className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition border-t-4 border-yellow-400"
             >
-              <h3 className="text-xl font-semibold text-green-700 mb-3">
+              <h3 className="text-xl font-semibold text-blue-700 mb-3">
                 {scholarship.title}
               </h3>
-              <p className="text-gray-600 mb-4">{scholarship.description}</p>
-              <button className="px-4 py-2 bg-green-600 text-white rounded-full text-sm font-medium hover:bg-green-700 transition">
+              <p className="text-gray-600 mb-6">{scholarship.description}</p>
+              <Button color="gold" variant="filled" rounded>
                 Learn More
-              </button>
+              </Button>
             </div>
           ))}
         </div>

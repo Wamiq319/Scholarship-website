@@ -13,15 +13,30 @@ const Hero = () => {
   const slides = [
     {
       bgImage: heroBg1,
-      title: "Unlock Your Future with Scholarships",
+      title: (
+        <>
+          Unlock Your <span className="text-yellow-400">Future</span> <br />{" "}
+          with Scholarships
+        </>
+      ),
       subtitle:
-        "Discover funding opportunities tailored to your education goals.",
+        "Discover funding opportunities tailored to your education goals and build a brighter tomorrow.",
+      description:
+        "With Scholarship Zone, students can **apply faster**, **track applications**, and access **fair, transparent processes** without paperwork.",
       buttonText: "Browse Scholarships",
     },
     {
       bgImage: heroBg2,
-      title: "Simple Applications, Big Opportunities",
-      subtitle: "Apply quickly and track your progress in one place.",
+      title: (
+        <>
+          Simple <span className="text-yellow-400">Applications</span>, <br />{" "}
+          Big Opportunities
+        </>
+      ),
+      subtitle:
+        "Our platform simplifies scholarship management for students and universities alike.",
+      description:
+        "Get access to **real-time updates**, **document verification**, and **merit-based selection** — all in one place.",
       buttonText: "Start Applying",
     },
   ];
@@ -42,18 +57,23 @@ const Hero = () => {
             className="relative h-screen bg-cover bg-center flex items-center justify-center"
             style={{ backgroundImage: `url(${slide.bgImage})` }}
           >
-            {/* Gradient Overlay */}
+            {/* Overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/80 to-black/40"></div>
 
             {/* Content */}
             <div className="relative z-10 text-center px-6 max-w-3xl">
-              <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-4 text-green-500 drop-shadow-lg">
+              <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-4 text-white drop-shadow-lg">
                 {slide.title}
               </h1>
-              <p className="text-lg md:text-xl mb-8 text-white opacity-90">
+              <p className="text-lg md:text-xl mb-4 text-gray-200">
                 {slide.subtitle}
               </p>
-              <Button rounded>{slide.buttonText}</Button>
+              <p className="text-md md:text-lg mb-6 text-gray-300">
+                {slide.description}
+              </p>
+              <Button color="gold" variant="filled" rounded>
+                {slide.buttonText}
+              </Button>
             </div>
           </div>
         </SwiperSlide>

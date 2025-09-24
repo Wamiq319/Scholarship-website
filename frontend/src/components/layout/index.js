@@ -1,3 +1,2 @@
-export * from './Navbar';
-export * from './Header';
-export * from './Footer';
+export { default as Navbar } from "./Navbar";
+export { default as Footer } from "./Footer";

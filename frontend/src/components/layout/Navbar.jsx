@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/LOGO.png";
-import { Button } from "../ui";
+import Button from "../ui/Button";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -16,30 +16,39 @@ const Navbar = () => {
   return (
     <nav className="bg-white shadow-md border-b border-gray-100">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
-        <div className="text-2xl font-bold text-green-700">
+        {/* Logo */}
+        <div className="flex items-center space-x-2">
           <Link to="/">
-            <img src={Logo} alt="Scholarship Zone" className="h-8" />
+            <img src={Logo} alt="Scholarship Zone" className="h-10" />
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center space-x-6">
+        {/* Desktop Nav Links */}
+        <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
             <Link
               key={link.label}
               to={link.path}
-              className="text-gray-700 hover:text-green-700 font-bold transition"
+              className="text-gray-700 hover:text-blue-700 font-medium transition"
             >
               {link.label}
             </Link>
           ))}
         </div>
 
+        {/* Desktop Login Button */}
         <div className="hidden md:block">
-          <Button rounded>Login</Button>
+          <Button color="blue" variant="filled" rounded>
+            Login
+          </Button>
         </div>
 
+        {/* Mobile Menu Button */}
         <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)} className="text-gray-700">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-gray-700 focus:outline-none"
+          >
             <svg
               className="w-6 h-6"
               fill="none"
@@ -58,19 +67,22 @@ const Navbar = () => {
         </div>
       </div>
 
+      {/* Mobile Dropdown Menu */}
       {isOpen && (
-        <div className="md:hidden mt-4 px-6 pb-4">
+        <div className="md:hidden mt-4 px-6 pb-6 border-t border-gray-100">
           <div className="flex flex-col gap-4">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 to={link.path}
-                className="text-gray-700 hover:text-green-700 font-bold transition"
+                className="text-gray-700 hover:text-blue-700 font-medium transition"
               >
                 {link.label}
               </Link>
             ))}
-            <Button rounded>Login</Button>
+            <Button color="blue" variant="filled" rounded>
+              Login
+            </Button>
           </div>
         </div>
       )}
