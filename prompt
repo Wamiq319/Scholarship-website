@@ -1,0 +1,6 @@
+I need you to create a readme file for my project backend Basically this backend is for scholar-ship-website.   │
+│    And wits tech stack is in nodejs and express NOt using any bcrypt or hashing or secuirity features for also     │
+│    keeping things simple not to tide secuirity for now more focused on features . The project is in Mvc pattern    │
+│    have controller models servcies folder also utils folder .ALso have index file in every folder for structure    │
+│    export keep the logic in controller get rewuest send reponse etc keep databse interactions in services keeep    │
+│    schemas in model folder using mongodb database also.   
