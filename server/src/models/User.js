@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["student", "admin", "committee"],
       default: "student",
+      required: true,
     },
     isActive: { type: Boolean, default: true },
   },

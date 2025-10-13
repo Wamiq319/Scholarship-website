@@ -1,4 +1,4 @@
-export const sendResponse = (reply, options, statusCode = 200) => {
+export const sendResponse = (res, options, statusCode = 200) => {
   const response = {
     success: options.success,
     message: options.message,
@@ -7,5 +7,5 @@ export const sendResponse = (reply, options, statusCode = 200) => {
     meta: options.meta,
   };
 
-  return reply.status(statusCode).send(response);
+  return res.status(statusCode).json(response);
 };

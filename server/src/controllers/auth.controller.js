@@ -1,44 +1,56 @@
-import * as authService from "../services/index.js";
+import { registerUser, loginUser } from "../services/index.js";
+import { sendResponse } from "../utils/response.js";
 
 // REGISTER CONTROLLER
 export const register = async (req, res) => {
-  try {
-    const { name, email, password, role } = req.body;
+  const { name, email, password, role } = req.body;
 
-    if (!name || !email || !password)
-      return res.status(400).json({ message: "All fields are required" });
+  if (!name || !email || !password)
+    return sendResponse(res, { success: false, message: "All fields are required" }, 400);
 
-    const user = await authService.registerUser({
-      name,
-      email,
-      password,
-      role,
-    });
-    res.status(201).json({
-      message: "User registered successfully",
-      user,
-    });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  const result = await registerUser({ name, email, password, role });
+
+  switch (result.status) {
+    case "SUCCESS":
+      return sendResponse(res, { 
+        success: true, 
+        message: "User registered successfully", 
+        data: result.data 
+      }, 201);
+    case "CONFLICT":
+      return sendResponse(res, { success: false, message: result.message }, 409);
+    case "SERVER_ERROR":
+      return sendResponse(res, { success: false, message: result.message }, 500);
+    default:
+      return sendResponse(res, { success: false, message: "An unexpected error occurred" }, 500);
   }
 };
 
 // LOGIN CONTROLLER
 export const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    if (!email || !password)
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
+  if (!email || !password)
+    return sendResponse(res, { success: false, message: "Email and password are required" }, 400);
 
-    const user = await authService.loginUser(email, password);
-    res.status(200).json({
-      message: "Login successful",
-      user,
-    });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  const result = await loginUser(email, password);
+
+  switch (result.status) {
+    case "SUCCESS":
+      return sendResponse(res, { 
+        success: true, 
+        message: "Login successful", 
+        data: result.data 
+      }, 200);
+    case "NOT_FOUND":
+      return sendResponse(res, { success: false, message: result.message }, 404);
+    case "UNAUTHORIZED":
+      return sendResponse(res, { success: false, message: result.message }, 401);
+    case "FORBIDDEN":
+      return sendResponse(res, { success: false, message: result.message }, 403);
+    case "SERVER_ERROR":
+      return sendResponse(res, { success: false, message: result.message }, 500);
+    default:
+      return sendResponse(res, { success: false, message: "An unexpected error occurred" }, 500);
   }
 };
