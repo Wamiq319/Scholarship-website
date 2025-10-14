@@ -1,7 +1,11 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { userRoutes, authRoutes } from "./src/routes/index.js";
+import {
+  userRoutes,
+  authRoutes,
+  scholarshipRoutes,
+} from "./src/routes/index.js";
 
 dotenv.config();
 const app = express();
@@ -19,6 +23,7 @@ app.get("/api", (req, res) => {
 });
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/scholarShip", scholarshipRoutes);
 
 // Server Start
 const PORT = process.env.PORT || 3000;
