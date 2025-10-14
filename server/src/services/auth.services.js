@@ -12,7 +12,8 @@ export const registerUser = async (userData) => {
     const savedUser = await user.save();
     return { status: "SUCCESS", data: savedUser };
   } catch (error) {
-    return { status: "SERVER_ERROR", message: error.message };
+    console.log(error.message);
+    return { status: "SERVER_ERROR", message: "Internal server error" };
   }
 };
 
