@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/LOGO.png";
-import Button from "../ui/Button";
+import { Button } from "../ui";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -38,9 +38,11 @@ const Navbar = () => {
 
         {/* Desktop Login Button */}
         <div className="hidden md:block">
-          <Button color="blue" variant="filled" rounded>
-            Login
-          </Button>
+          <Link to="/login">
+            <Button color="blue" variant="filled" rounded>
+              Login
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -80,9 +82,11 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            <Button color="blue" variant="filled" rounded>
-              Login
-            </Button>
+            <Link to="/login">
+              <Button color="blue" variant="filled" rounded>
+                Login
+              </Button>
+            </Link>
           </div>
         </div>
       )}

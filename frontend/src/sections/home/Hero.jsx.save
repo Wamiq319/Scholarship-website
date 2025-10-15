@@ -5,7 +5,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 
-import Button from "./Button";
+import { Button } from "../../../components";
 import heroBg1 from "../../assets/hero/hero-bg-1.jpeg";
 import heroBg2 from "../../assets/hero/hero-g-2.jpeg";
 
@@ -23,12 +23,16 @@ const Hero = () => {
         "Discover funding opportunities tailored to your education goals and build a brighter tomorrow.",
       description:
         "With Scholarship Zone, students can **apply faster**, **track applications**, and access **fair, transparent processes** without paperwork.",
+lear
       buttonText: "Browse Scholarships",
     },
     {
       bgImage: heroBg2,
       title: (
         <>
+
+x
+o
           Simple <span className="text-yellow-400">Applications</span>, <br />{" "}
           Big Opportunities
         </>

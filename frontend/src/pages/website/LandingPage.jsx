@@ -7,7 +7,7 @@ import {
   WhyChooseUs,
   Testimonials,
   LatestNews,
-} from "../../components/ui";
+} from "@/sections";
 
 const LandingPage = () => {
   return (
