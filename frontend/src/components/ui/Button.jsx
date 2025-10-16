@@ -5,10 +5,11 @@ const Button = ({
   children,
   onClick,
   type = "button",
-  variant = "filled", // "filled" | "outline"
+  variant = "filled", // "filled" | "outlined"
   color = "blue", // "blue" | "gold" | "white"
   rounded = true, // true = pill, false = small rounded
   className = "",
+  disabled = false,
 }) => {
   const baseStyles =
     "px-6 py-2.5 font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1";
@@ -22,7 +23,7 @@ const Button = ({
       white:
         "bg-white text-gray-800 border border-gray-200 hover:bg-gray-50 focus:ring-gray-400",
     },
-    outline: {
+    outlined: {
       blue: "bg-transparent text-blue-600 border border-blue-600 hover:bg-blue-50 focus:ring-blue-500",
       gold: "bg-transparent text-yellow-600 border border-yellow-500 hover:bg-yellow-50 focus:ring-yellow-400",
       white:
@@ -30,10 +31,16 @@ const Button = ({
     },
   };
 
-  const classes = clsx(baseStyles, shape, variants[variant][color], className);
+  const classes = clsx(
+    baseStyles,
+    shape,
+    variants[variant][color],
+    className,
+    disabled && "opacity-50 cursor-not-allowed"
+  );
 
   return (
-    <button type={type} onClick={onClick} className={classes}>
+    <button type={type} onClick={onClick} className={classes} disabled={disabled}>
       {children}
     </button>
   );

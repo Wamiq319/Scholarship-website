@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../redux/slices/resourcesSLice";
-import { Navbar, Footer } from "../../components";
-import { Button } from "../../components";
+import { login } from "@/redux/slices/resourcesSLice";
+import { Navbar, Footer } from "@/components/layout";
+import Button from "@/components/ui/Button";
+import InputField from "@/components/input/InputField";
+import logo from "@/assets/LOGO.png";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -14,69 +16,90 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await dispatch(login({ username, password }));
+    if (status === "loading") return;
+    const result = await dispatch(login({ email, password }));
     if (login.fulfilled.match(result)) {
-      navigate("/admin"); // Or wherever you want to redirect after login
+      navigate("/admin");
     }
+  };
+
+  const handleRegister = () => {
+    navigate("/register");
   };
 
   return (
     <div>
       <Navbar />
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold text-center text-gray-900">
-            Admin Login
-          </h2>
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Username
-              </label>
-              <input
-                id="username"
-                name="username"
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex flex-col md:flex-row w-full max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
+          {/* Left Column */}
+          <div className="hidden md:flex w-1/2 bg-gradient-to-br from-gray-100 to-gray-200 items-center justify-center flex-col p-12 rounded-l-2xl">
+            <div className="bg-white rounded-full p-4 shadow-md mb-6">
+              <img src={logo} alt="Logo" className="w-24 h-24 object-contain" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-800 mb-3 text-center">
+              Welcome Back!
+            </h1>
+            <p className="text-center text-gray-600 leading-relaxed max-w-xs">
+              Log in to access your scholarship dashboard, manage applications,
+              and explore new opportunities easily.
+            </p>
+          </div>
+
+          {/* Right Column */}
+          <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
+            <h2 className="text-3xl font-extrabold text-center text-gray-900 mb-8">
+              Login to Your Account
+            </h2>
+
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <InputField
+                label="Email"
+                name="email"
                 type="text"
                 required
-                className="block w-full px-3 py-2 mt-1 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
               />
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <input
-                id="password"
+              <InputField
+                label="Password"
                 name="password"
                 type="password"
                 required
-                className="block w-full px-3 py-2 mt-1 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
               />
-            </div>
-            <div>
+
               <Button
                 type="submit"
                 color="blue"
                 variant="filled"
                 rounded
-                className="w-full"
-                disabled={status === 'loading'}
+                className="w-full py-3 text-lg"
+                disabled={status === "loading"}
               >
-                {status === 'loading' ? 'Logging in...' : 'Login'}
+                {status === "loading" ? "Logging in..." : "Login"}
               </Button>
-            </div>
-            {error && <p className="text-sm text-red-600">{error}</p>}
-          </form>
+
+              {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+
+              <div className="text-center pt-4">
+                <p className="text-gray-600 mb-2">Don’t have an account?</p>
+                <Button
+                  type="button"
+                  variant="outlined"
+                  color="blue"
+                  rounded
+                  className="px-6 py-2"
+                  onClick={handleRegister}
+                >
+                  Register as Student
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
       <Footer />
