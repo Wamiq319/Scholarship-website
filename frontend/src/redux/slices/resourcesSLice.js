@@ -11,6 +11,29 @@ const handleApiResponse = async (response) => {
 
 // --- Thunks ---
 
+
+// --- Register User ---
+export const registerUser = createAsyncThunk(
+  "resources/registerUser",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const res = await fetch(`${API_URL}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      });
+      const { data, success, message } = await handleApiResponse(res);
+      return { data, success, message };
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+
+
+
 // Login
 export const login = createAsyncThunk(
   "resources/login",
@@ -124,6 +147,20 @@ const resourcesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // Register User
+      .addCase(registerUser.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.message = action.payload.message;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
       // Login
       .addCase(login.fulfilled, (state, action) => {
         state.admin = action.payload.data;

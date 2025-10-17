@@ -1,24 +1,40 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "@/redux/slices/resourcesSLice";
 import { Navbar, Footer } from "@/components/layout";
 import Button from "@/components/ui/Button";
 import InputField from "@/components/input/InputField";
 import logo from "@/assets/LOGO.png";
+import { registerUser } from "@/redux/slices/resourcesSLice";
 
-const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const RegisterPage = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "STUDENT", // default role
+  });
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { status, error } = useSelector((state) => state.resources);
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (status === "loading") return;
-    const result = await dispatch(login({ email, password }));
-    if (login.fulfilled.match(result)) {
+
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    const result = await dispatch(registerUser(formData));
+    if (registerUser.fulfilled.match(result)) {
       const role = result.payload.data.role;
 
       if (role === "ADMIN") navigate("/admin");
@@ -26,11 +42,6 @@ const LoginPage = () => {
       else if (role === "COMMITTEE") navigate("/committee");
       else navigate("/login"); // fallback
     }
-
-  };
-
-  const handleRegister = () => {
-    navigate("/register");
   };
 
   return (
@@ -44,39 +55,76 @@ const LoginPage = () => {
               <img src={logo} alt="Logo" className="w-24 h-24 object-contain" />
             </div>
             <h1 className="text-3xl font-bold text-gray-800 mb-3 text-center">
-              Welcome Back!
+              Create an Account!
             </h1>
             <p className="text-center text-gray-600 leading-relaxed max-w-xs">
-              Log in to access your scholarship dashboard, manage applications,
-              and explore new opportunities easily.
+              Register to access the Scholarship Zone platform and start
+              applying for scholarships online.
             </p>
           </div>
 
           {/* Right Column */}
           <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
             <h2 className="text-3xl font-extrabold text-center text-gray-900 mb-8">
-              Login to Your Account
+              Register as Student / Committee
             </h2>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               <InputField
-                label="Email"
-                name="email"
+                label="Full Name"
+                name="name"
                 type="text"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your full name"
+              />
+
+              <InputField
+                label="Email"
+                name="email"
+                type="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="Enter your email"
               />
+
               <InputField
                 label="Password"
                 name="password"
                 type="password"
                 required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter password"
               />
+
+              <InputField
+                label="Confirm Password"
+                name="confirmPassword"
+                type="password"
+                required
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm password"
+              />
+
+              {/* Role selection */}
+              <div>
+                <label className="block text-gray-700 mb-2 font-medium">
+                  Select Role
+                </label>
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                  <option value="STUDENT">Student</option>
+                  <option value="COMMITTEE">Committee</option>
+                </select>
+              </div>
 
               <Button
                 type="submit"
@@ -86,22 +134,22 @@ const LoginPage = () => {
                 className="w-full py-3 text-lg"
                 disabled={status === "loading"}
               >
-                {status === "loading" ? "Logging in..." : "Login"}
+                {status === "loading" ? "Creating account..." : "Register"}
               </Button>
 
               {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
 
               <div className="text-center pt-4">
-                <p className="text-gray-600 mb-2">Don’t have an account?</p>
+                <p className="text-gray-600 mb-2">Already have an account?</p>
                 <Button
                   type="button"
                   variant="outlined"
                   color="blue"
                   rounded
                   className="px-6 py-2"
-                  onClick={handleRegister}
+                  onClick={() => navigate("/login")}
                 >
-                  Register as Student
+                  Back to Login
                 </Button>
               </div>
             </form>
@@ -113,4 +161,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
