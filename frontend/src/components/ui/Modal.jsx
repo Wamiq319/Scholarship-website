@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "@/components/ui/Button";
 
 export const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
   if (!isOpen) return null;
@@ -21,12 +22,15 @@ export const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
             <h2 className="text-lg md:text-xl font-semibold text-gray-800">
               {title}
             </h2>
-            <button
+
+            <Button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl leading-none transition"
+              variant="outline"
+              color="gray"
+              className="text-2xl w-10 h-10 flex items-center justify-center p-0 rounded-full"
             >
               &times;
-            </button>
+            </Button>
           </div>
         )}
 
@@ -36,4 +40,3 @@ export const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
     </div>
   );
 };
-

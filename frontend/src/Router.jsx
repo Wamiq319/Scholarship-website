@@ -6,19 +6,19 @@ import {
   About,
   Contact,
   AdminPage,
-  CommitteePage,
-  StudentPage,
-  Students,
-  AvailableScholarships,
+  AvailableScholarshipsPage,
   MyApplications,
-  StudentProfile,
-  PendingReviews,
-  ApprovedApplications,
-  Settings,
-} from "./pages";
-import LoginPage from "./pages/auth/LoginPage";
-import RegisterPage from "./pages/auth/RegisterPage";
-import { ScholarManagementPage } from "./pages/admin/Scholarships";
+  StudentProfilePage,
+  ScholarManagementPage,
+  LoginPage,
+  StudentDashboard,
+  RegisterPage,
+  ApprovedApplicationsPage,
+  CommitteeDashboard,
+  PendingReviewsPage,
+  SettingsPage
+} from "@/pages";
+import { StudentsManagementPage } from "./pages/admin/StudentManagementPage";
 
 const AppRouter = () => {
   return (
@@ -35,21 +35,21 @@ const AppRouter = () => {
         <Route path="/admin" element={<AdminPage />}>
           {/* Nested Routes (render inside <Outlet />) */}
           <Route index element={<ScholarManagementPage />} />
-          <Route path="students" element={<Students />} />
+          <Route path="students" element={<StudentsManagementPage />} />
         </Route>
 
         {/* Student Routes */}
-        <Route path="/student" element={<StudentPage />}>
-          <Route index element={<AvailableScholarships />} />
+        <Route path="/student" element={<StudentDashboard />}>
+          <Route index element={<AvailableScholarshipsPage />} />
           <Route path="applications" element={<MyApplications />} />
-          <Route path="profile" element={<StudentProfile />} />
+          <Route path="profile" element={<StudentProfilePage />} />
         </Route>
 
         {/* Committee Routes */}
-        <Route path="/committee" element={<CommitteePage />}>
-          <Route index element={<PendingReviews />} />
-          <Route path="approved" element={<ApprovedApplications />} />
-          <Route path="settings" element={<Settings />} />
+        <Route path="/committee" element={<CommitteeDashboard />}>
+          <Route index element={<PendingReviewsPage />} />
+          <Route path="approved" element={<ApprovedApplicationsPage />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
 
       </Routes>

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Navbar, Footer } from "@/components/layout";
-import Button from "@/components/ui/Button";
-import InputField from "@/components/input/InputField";
+import { Navbar, Footer, Dropdown } from "@/components";
+import {Button} from "@/components";
 import logo from "@/assets/LOGO.png";
 import { registerUser } from "@/redux/slices/resourcesSLice";
+import { InputField } from "@/components";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +19,7 @@ const RegisterPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { status, error } = useSelector((state) => state.resources);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -111,31 +112,27 @@ const RegisterPage = () => {
               />
 
               {/* Role selection */}
-              <div>
-                <label className="block text-gray-700 mb-2 font-medium">
-                  Select Role
-                </label>
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                >
-                  <option value="STUDENT">Student</option>
-                  <option value="COMMITTEE">Committee</option>
-                </select>
-              </div>
+              <Dropdown
+               label="Select Role"
+               options={[
+               { label: "Student", value: "STUDENT" },
+               { label: "Committee", value: "COMMITTEE" },
+               ]}
+                selectedValue={formData.role}
+                onChange={(val) => setFormData({ ...formData, role: val })}
+              />
 
-              <Button
-                type="submit"
-                color="blue"
-                variant="filled"
-                rounded
-                className="w-full py-3 text-lg"
-                disabled={status === "loading"}
-              >
-                {status === "loading" ? "Creating account..." : "Register"}
-              </Button>
+             <Button
+  type="submit"
+  color="blue"
+  variant="filled"
+  rounded
+  className={`w-full py-3 text-lg ${status === "loading" ? "opacity-50 cursor-not-allowed" : ""}`}
+  onClick={handleSubmit}
+>
+  {status === "loading" ? "Creating account..." : "Register"}
+</Button>
+
 
               {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
 
@@ -143,7 +140,7 @@ const RegisterPage = () => {
                 <p className="text-gray-600 mb-2">Already have an account?</p>
                 <Button
                   type="button"
-                  variant="outlined"
+                  variant="outline"
                   color="blue"
                   rounded
                   className="px-6 py-2"

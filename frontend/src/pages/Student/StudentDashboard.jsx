@@ -2,7 +2,7 @@ import { Sidebar } from "@/components";
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-export const StudentPage = () => {
+export const StudentDashboard = () => {
   return (
     <div className="w-full h-screen flex bg-gray-50">
       <Sidebar role="STUDENT" />

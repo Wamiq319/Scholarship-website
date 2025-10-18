@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const PendingReviews = () => {
+export const PendingReviewsPage = () => {
   return (
     <div>PendingReviews</div>
   )

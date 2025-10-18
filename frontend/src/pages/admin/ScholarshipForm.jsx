@@ -1,10 +1,10 @@
   import React, { useEffect, useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
   import { InputField, Dropdown, Button } from "@/components";
-  import { createScholarship } from "@/redux/slices/resourcesSLice";
+import { createScholarship } from "@/redux/slices/resourcesSLice";
 
 
-  const ScholarshipForm = ({ onCancel }) => {
+ export const ScholarshipForm = ({ onCancel }) => {
     const dispatch = useDispatch();
 
     const { status, error } = useSelector((state) => state.resources);
@@ -39,12 +39,6 @@
     const handleChange = (e) => {
       const { name, value } = e.target;
       setFormData((prev) => ({ ...prev, [name]: value }));
-    };
-
-    // --- Checkbox Change ---
-    const handleCheckboxChange = (e) => {
-      const { name, checked } = e.target;
-      setFormData((prev) => ({ ...prev, [name]: checked }));
     };
 
     // --- Dropdown Change ---
@@ -158,14 +152,13 @@
         )}
 
         <div className="flex justify-end gap-3 mt-4">
-          <Button onClick={onCancel} variant="outlined" color="blue">
+          <Button onClick={onCancel} variant="outline" color="blue">
             Cancel
           </Button>
           <Button
             type="submit"
             variant="filled"
             color="blue"
-            isLoading={status === "loading"}
           >
             Create
           </Button>
@@ -174,4 +167,3 @@
     );
   };
 
-  export default ScholarshipForm;

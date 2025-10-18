@@ -1,5 +1,5 @@
 import React from "react";
 
-export const AvailableScholarships = () => {
+export const AvailableScholarshipsPage = () => {
   return <div>AvailableScholarships</div>;
 };

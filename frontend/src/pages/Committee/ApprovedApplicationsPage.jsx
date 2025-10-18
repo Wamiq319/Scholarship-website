@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const ApprovedApplications = () => {
+export const ApprovedApplicationsPage = () => {
   return (
     <div>ApprovedApplications</div>
   )

@@ -1,4 +1,4 @@
-  import { Home, Users, FileText, Settings, ClipboardList } from "lucide-react";
+  import { Users, FileText, Settings, ClipboardList } from "lucide-react";
 
   export const SidebarMenus = {
     ADMIN: [

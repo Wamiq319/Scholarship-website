@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FaTrash, FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, ConfirmationModal, DataTable, Modal, ScholarshipForm } from "@/components";
+import { Button, ConfirmationModal, DataTable, Modal } from "@/components";
 import {
   fetchResources,
   deleteResource,
 } from "@/redux/slices/resourcesSLice";
+import { ScholarshipForm } from "@/pages";
 
 export const ScholarManagementPage = () => {
   const dispatch = useDispatch();
@@ -38,14 +39,14 @@ export const ScholarManagementPage = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Scholarship Management</h1>
+      <div className="flex justify-between mt-10 md:mt-0 items-center">
+        <h1 className="text-xl font-bold ">Scholarship Management</h1>
         <Button
-          text="Add Scholarship"
-          onClick={() => setIsFormOpen(true)}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-          icon={<FaPlus />}
-        />
+    onClick={() => setIsFormOpen(true)}
+    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+  >
+    <FaPlus />
+  </Button>
       </div>
 
       {/* Loading/Error UI */}

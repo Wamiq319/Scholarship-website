@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "@/redux/slices/resourcesSLice";
-import { Navbar, Footer } from "@/components/layout";
-import Button from "@/components/ui/Button";
-import InputField from "@/components/input/InputField";
+import { Navbar, Footer } from "@/components";
 import logo from "@/assets/LOGO.png";
+import { Button, InputField } from "@/components";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -95,7 +94,7 @@ const LoginPage = () => {
                 <p className="text-gray-600 mb-2">Don’t have an account?</p>
                 <Button
                   type="button"
-                  variant="outlined"
+                  variant="outline"
                   color="blue"
                   rounded
                   className="px-6 py-2"

@@ -13,21 +13,14 @@ const Dropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  //  Dummy fallback words (since redux isn't used)
-  const words = {
-    ui: {
-      select_option: "Select an option",
-    },
-  };
-
   const handleSelect = (value) => {
     onChange(value);
     setIsOpen(false);
   };
 
+  // Direct default string for English
   const selectedLabel =
-    options.find((opt) => opt.value === selectedValue)?.label ||
-    words.ui.select_option;
+    options.find((opt) => opt.value === selectedValue)?.label || "Select an option";
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -54,9 +47,7 @@ const Dropdown = ({
         } ${isOpen ? "ring-1 ring-[#185D86]/50" : ""}`}
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <span className="truncate text-[#12254D]">
-          {selectedLabel || "Select..."}
-        </span>
+        <span className="truncate text-[#12254D]">{selectedLabel}</span>
         {isOpen ? (
           <FaChevronUp className="h-4 w-4 text-[#185D86]" />
         ) : (
@@ -82,9 +73,7 @@ const Dropdown = ({
               </div>
             ))
           ) : (
-            <div className="px-3 py-2 text-gray-500 text-sm">
-              No options available
-            </div>
+            <div className="px-3 py-2 text-gray-500 text-sm">No options available</div>
           )}
         </div>
       )}

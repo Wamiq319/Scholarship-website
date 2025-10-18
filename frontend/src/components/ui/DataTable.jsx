@@ -1,5 +1,6 @@
 import { formatDate } from "@/utils";
 import React from "react";
+import Button from "@/components/ui/Button";
 
 const DataTable = ({ heading, tableHeader, tableData, buttons = [] }) => {
   return (
@@ -37,7 +38,7 @@ const DataTable = ({ heading, tableHeader, tableData, buttons = [] }) => {
                 {tableHeader.map((col, i) => {
                   const value = row[col.key];
 
-                  //  Boolean indicator
+                  // Boolean indicator
                   if (typeof value === "boolean") {
                     return (
                       <td
@@ -57,7 +58,7 @@ const DataTable = ({ heading, tableHeader, tableData, buttons = [] }) => {
                     );
                   }
 
-                  // Date formatting check (ISO string)
+                  // Date formatting
                   if (typeof value === "string" && value.includes("T")) {
                     return (
                       <td
@@ -69,7 +70,6 @@ const DataTable = ({ heading, tableHeader, tableData, buttons = [] }) => {
                     );
                   }
 
-                  // Default fallback
                   return (
                     <td
                       key={i}
@@ -84,14 +84,17 @@ const DataTable = ({ heading, tableHeader, tableData, buttons = [] }) => {
                   <td className="px-4 py-3 border border-gray-200 text-center">
                     <div className="flex justify-center gap-2">
                       {buttons.map((btn, idx) => (
-                        <button
+                        <Button
                           key={idx}
                           onClick={() => btn.onClick(row)}
-                          className={`${btn.className} px-3 py-1 rounded-md flex items-center gap-1`}
+                          className={btn.className}
+                          color={btn.color || "blue"}
+                          variant={btn.variant || "filled"}
+                          rounded={btn.rounded ?? true}
                         >
                           {btn.icon && <span>{btn.icon}</span>}
                           {btn.text && <span>{btn.text}</span>}
-                        </button>
+                        </Button>
                       ))}
                     </div>
                   </td>
