@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import {
   LandingPage,
   Scholarships,
-  ScholarshipsForPenal,
   About,
   Contact,
   AdminPage,
@@ -19,6 +18,7 @@ import {
 } from "./pages";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
+import { ScholarManagementPage } from "./pages/admin/Scholarships";
 
 const AppRouter = () => {
   return (
@@ -34,7 +34,7 @@ const AppRouter = () => {
         {/* Admin Parent Route */}
         <Route path="/admin" element={<AdminPage />}>
           {/* Nested Routes (render inside <Outlet />) */}
-          <Route index element={<ScholarshipsForPenal />} />
+          <Route index element={<ScholarManagementPage />} />
           <Route path="students" element={<Students />} />
         </Route>
 

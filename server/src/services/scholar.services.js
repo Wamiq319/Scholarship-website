@@ -7,6 +7,8 @@ export const createScholarship = async ({
   eligibilityCriteria,
   amount,
   deadline,
+  category,
+  isActive
 }) => {
   try {
     const scholarship = new Scholarship({
@@ -15,6 +17,8 @@ export const createScholarship = async ({
       eligibilityCriteria,
       amount,
       deadline,
+      category,
+      isActive
     });
     const saved = await scholarship.save();
     return { status: "SUCCESS", data: saved };

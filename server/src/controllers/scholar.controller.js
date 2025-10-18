@@ -10,11 +10,11 @@ import { sendResponse } from "../utils/index.js";
 
 // Create Scholarship
 export const create = async (req, res) => {
-  const { title, description, eligibilityCriteria, amount, deadline } =
+  const { title, description, eligibilityCriteria, amount, deadline, category, isActive } =
     req.body;
 
   // Validation
-  if (!title || !description || !eligibilityCriteria || !amount || !deadline) {
+  if (!title || !description || !eligibilityCriteria || !amount || !deadline || !category) {
     return sendResponse(
       res,
       { success: false, message: "All required fields must be filled" },
@@ -28,6 +28,8 @@ export const create = async (req, res) => {
     eligibilityCriteria,
     amount,
     deadline,
+    category,
+    isActive
   });
 
   switch (result.status) {

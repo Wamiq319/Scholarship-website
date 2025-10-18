@@ -9,8 +9,7 @@ const handleApiResponse = async (response) => {
   return result;
 };
 
-// --- Thunks ---
-
+// ====================== AUTH ======================
 
 // --- Register User ---
 export const registerUser = createAsyncThunk(
@@ -31,10 +30,7 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-
-
-
-// Login
+// --- Login ---
 export const login = createAsyncThunk(
   "resources/login",
   async (credentials, { rejectWithValue }) => {
@@ -54,12 +50,14 @@ export const login = createAsyncThunk(
   }
 );
 
-// Logout
+// --- Logout ---
 export const logout = createAsyncThunk("resources/logout", async () => {
   localStorage.removeItem("admin");
 });
 
-// Fetch resources
+// ====================== GENERIC CRUD ======================
+
+// --- Fetch Resource ---
 export const fetchResources = createAsyncThunk(
   "resources/fetch",
   async ({ resource }, { rejectWithValue }) => {
@@ -75,7 +73,7 @@ export const fetchResources = createAsyncThunk(
   }
 );
 
-// Create resource
+// --- Create Resource ---
 export const createResource = createAsyncThunk(
   "resources/create",
   async ({ resource, body }, { rejectWithValue }) => {
@@ -94,7 +92,7 @@ export const createResource = createAsyncThunk(
   }
 );
 
-// Update resource
+// --- Update Resource ---
 export const updateResource = createAsyncThunk(
   "resources/update",
   async ({ resource, id, body }, { rejectWithValue }) => {
@@ -113,7 +111,7 @@ export const updateResource = createAsyncThunk(
   }
 );
 
-// Delete resource
+// --- Delete Resource ---
 export const deleteResource = createAsyncThunk(
   "resources/delete",
   async ({ resource, id }, { rejectWithValue }) => {
@@ -130,7 +128,17 @@ export const deleteResource = createAsyncThunk(
   }
 );
 
-// --- Slice ---
+// ====================== SCHOLARSHIP SHORTCUTS ======================
+
+
+export const createScholarship = (formData) =>
+  createResource({ resource: "scholarships", body: formData });
+
+export const deleteScholarship = (id) =>
+  deleteResource({ resource: "scholarships", id });
+
+// ====================== SLICE ======================
+
 const storedAdmin = JSON.parse(localStorage.getItem("admin") || "null");
 
 const initialState = {
@@ -147,10 +155,9 @@ const resourcesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Register User
+      // --- Register ---
       .addCase(registerUser.pending, (state) => {
         state.status = "loading";
-        state.error = null;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -161,7 +168,7 @@ const resourcesSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Login
+      // --- Login ---
       .addCase(login.fulfilled, (state, action) => {
         state.admin = action.payload.data;
         state.message = action.payload.message;
@@ -171,26 +178,27 @@ const resourcesSlice = createSlice({
         state.error = action.payload;
         state.status = "failed";
       })
-      // Logout
+
+      // --- Logout ---
       .addCase(logout.fulfilled, (state) => {
         state.admin = null;
         state.status = "idle";
       })
-      // Fetch
+
+      // --- Fetch ---
       .addCase(fetchResources.pending, (state) => {
         state.status = "loading";
-        state.error = null;
       })
       .addCase(fetchResources.fulfilled, (state, action) => {
         state.data[action.payload.resource] = action.payload.data || [];
-        state.message = action.payload.message;
         state.status = "succeeded";
       })
       .addCase(fetchResources.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
-      // Create
+
+      // --- Create ---
       .addCase(createResource.pending, (state) => {
         state.status = "loading";
       })
@@ -204,21 +212,21 @@ const resourcesSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
-      // Update
+
+      // --- Update ---
       .addCase(updateResource.fulfilled, (state, action) => {
         const { resource, id, data } = action.payload;
         state.data[resource] = state.data[resource].map((item) =>
-          item.id === id ? { ...item, ...data } : item
+          item._id === id ? { ...item, ...data } : item
         );
-        state.status = "succeeded";
       })
-      // Delete
+
+      // --- Delete ---
       .addCase(deleteResource.fulfilled, (state, action) => {
         const { resource, id } = action.payload;
         state.data[resource] = state.data[resource].filter(
-          (item) => item.id !== id
+          (item) => item._id !== id
         );
-        state.status = "succeeded";
       });
   },
 });

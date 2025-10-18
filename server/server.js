@@ -2,11 +2,13 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import cron from "node-cron";
 import {
   userRoutes,
   authRoutes,
   scholarshipRoutes,
 } from "./src/routes/index.js";
+import { deactivateExpiredScholarships } from "./src/utils/index.js";
 
 dotenv.config();
 const app = express();
@@ -59,13 +61,15 @@ mongoose
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
+  cron.schedule("0 0 * * *", deactivateExpiredScholarships);
+
 // Routes
 app.get("/api", (req, res) => {
   res.status(200).json({ message: "Server is running" });
 });
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/scholarShip", scholarshipRoutes);
+app.use("/api/scholarships", scholarshipRoutes);
 
 // Server Start
 const PORT = process.env.PORT || 3000;
