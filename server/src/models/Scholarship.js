@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const scholarshipSchema = new mongoose.Schema(
   {
-    title: { 
+    title: {
       type: String,
       required: true,
       trim: true,
@@ -13,9 +13,10 @@ const scholarshipSchema = new mongoose.Schema(
       trim: true,
     },
     eligibilityCriteria: {
-      type: String,
-      required: true,
-      trim: true,
+      minGPA: Number,
+      maxIncome: Number,
+      department: [String],
+      semester: [Number],
     },
     amount: {
       type: Number,

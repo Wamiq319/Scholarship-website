@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       lowercase: true,
+
       trim: true,
     },
     password: { type: String, required: true, minlength: 6 },
@@ -16,6 +17,14 @@ const userSchema = new mongoose.Schema(
       enum: ["STUDENT", "ADMIN", "COMMITTEE"],
       default: "STUDENT",
       required: true,
+    },
+    department: String,
+    rollNo: String,
+    profile: {
+      phone: String,
+      address: String,
+      gpa: Number,
+      familyIncome: Number,
     },
     isActive: { type: Boolean, default: true },
   },
