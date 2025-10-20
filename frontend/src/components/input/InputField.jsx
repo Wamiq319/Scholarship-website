@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { useSelector } from "react-redux";
 
+const defaultLangState = { lang: "en", words: { ui: {} } };
+
 const InputField = ({
   required = true,
   label,
@@ -15,9 +17,7 @@ const InputField = ({
   error,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
-  const { lang, words } = useSelector(
-    (state) => state.lang || { lang: "en", words: { ui: {} } }
-  );
+  const { lang, words } = useSelector((state) => state.lang) || defaultLangState;
 
   const inputClasses = `
     w-full p-3 border-b-2 border-[#185D86] rounded-md
