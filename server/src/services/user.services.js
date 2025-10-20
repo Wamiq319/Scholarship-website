@@ -9,6 +9,35 @@ export const createUser = async (userData) => {
   return await user.save();
 };
 
-export const findUserByEmail = async (email) => {
-  return await User.findOne({ email });
+export const getAllUsers = async () => {
+  try {
+    const users = await User.find({});
+    return { status: "SUCCESS", data: users };
+  } catch (error) {
+    return { status: "SERVER_ERROR", message: error.message };
+  }
+};
+
+export const getUserById = async (id) => {
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return { status: "NOT_FOUND", message: "User not found" };
+    }
+    return { status: "SUCCESS", data: user };
+  } catch (error) {
+    return { status: "SERVER_ERROR", message: error.message };
+  }
+};
+
+export const deleteUserById = async (id) => {
+  try {
+    const deleted = await User.findByIdAndDelete(id);
+    if (!deleted) {
+      return { status: "NOT_FOUND", message: "user not found" };
+    }
+    return { status: "SUCCESS" };
+  } catch (error) {
+    return { status: "SERVER_ERROR", message: error.message };
+  }
 };

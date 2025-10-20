@@ -1,18 +1,37 @@
 import { registerUser, loginUser } from "../services/index.js";
-import { sendResponse } from "../utils/response.js";
+import { sendResponse } from "../utils/index.js";
 
 // REGISTER CONTROLLER
 export const register = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, department, rollNo, profile } = req.body;
 
-  if (!name || !email || !password || !role)
+  if (
+    !name ||
+    !email ||
+    !password ||
+    !role ||
+    !department ||
+    !rollNo ||
+    !profile.phone ||
+    !profile.address ||
+    profile.gpa == null ||
+    profile.familyIncome == null
+  )
     return sendResponse(
       res,
       { success: false, message: "All fields are required" },
       400
     );
 
-  const result = await registerUser({ name, email, password, role });
+  const result = await registerUser({
+    name,
+    email,
+    password,
+    role,
+    department,
+    rollNo,
+    profile,
+  });
 
   switch (result.status) {
     case "SUCCESS":

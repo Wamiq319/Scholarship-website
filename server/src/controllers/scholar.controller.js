@@ -10,11 +10,28 @@ import { sendResponse } from "../utils/index.js";
 
 // Create Scholarship
 export const create = async (req, res) => {
-  const { title, description, eligibilityCriteria, amount, deadline, category, isActive } =
-    req.body;
+  const {
+    title,
+    description,
+    eligibilityCriteria,
+    amount,
+    deadline,
+    category,
+    isActive,
+  } = req.body;
 
   // Validation
-  if (!title || !description || !eligibilityCriteria || !amount || !deadline || !category) {
+  if (
+    !title ||
+    !description ||
+    !eligibilityCriteria.minGPA ||
+    !eligibilityCriteria.maxIncome ||
+    !eligibilityCriteria.department ||
+    !eligibilityCriteria.semester ||
+    !amount ||
+    !deadline ||
+    !category
+  ) {
     return sendResponse(
       res,
       { success: false, message: "All required fields must be filled" },
@@ -29,7 +46,7 @@ export const create = async (req, res) => {
     amount,
     deadline,
     category,
-    isActive
+    isActive,
   });
 
   switch (result.status) {
@@ -59,7 +76,7 @@ export const create = async (req, res) => {
 };
 
 // Get All Scholarships
-export const getAll = async (req, res) => {
+export const AllScholarshipsGet = async (req, res) => {
   const result = await getAllScholarships();
 
   switch (result.status) {
@@ -81,7 +98,7 @@ export const getAll = async (req, res) => {
 };
 
 // Get Single Scholarship by ID
-export const getById = async (req, res) => {
+export const scholarshipGetById = async (req, res) => {
   const { id } = req.params;
 
   const result = await getScholarshipById(id);
@@ -112,47 +129,72 @@ export const getById = async (req, res) => {
 
 // Update Scholarship
 export const update = async (req, res) => {
-  const { id } = req.params;
-  const { title, description, eligibilityCriteria, amount, deadline } =
-    req.body;
+  try {
+    const { id } = req.params;
+    const {
+      title,
+      description,
+      eligibilityCriteria,
+      amount,
+      deadline,
+      category,
+      isActive,
+    } = req.body;
 
-  const result = await updateScholarship(id, {
-    title,
-    description,
-    eligibilityCriteria,
-    amount,
-    deadline,
-  });
+    //  dynamic updateData object: only add existing fields
+    const updateData = {};
 
-  switch (result.status) {
-    case "SUCCESS":
-      return sendResponse(
-        res,
-        {
-          success: true,
-          message: "Scholarship updated successfully",
-          data: result.data,
-        },
-        200
-      );
-    case "NOT_FOUND":
-      return sendResponse(
-        res,
-        { success: false, message: result.message },
-        404
-      );
-    case "SERVER_ERROR":
-      return sendResponse(
-        res,
-        { success: false, message: result.message },
-        500
-      );
-    default:
-      return sendResponse(
-        res,
-        { success: false, message: "Unexpected error occurred" },
-        500
-      );
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (amount !== undefined) updateData.amount = amount;
+    if (deadline !== undefined) updateData.deadline = deadline;
+    if (category !== undefined) updateData.category = category;
+    if (isActive !== undefined) updateData.isActive = isActive;
+
+    //  nested eligibility check
+    if (eligibilityCriteria && typeof eligibilityCriteria === "object") {
+      updateData.eligibilityCriteria = {};
+      const { minGPA, maxIncome, department, semester } = eligibilityCriteria;
+      if (minGPA !== undefined) updateData.eligibilityCriteria.minGPA = minGPA;
+      if (maxIncome !== undefined)
+        updateData.eligibilityCriteria.maxIncome = maxIncome;
+      if (department !== undefined)
+        updateData.eligibilityCriteria.department = department;
+      if (semester !== undefined)
+        updateData.eligibilityCriteria.semester = semester;
+    }
+
+    const result = await updateScholarship(id, updateData);
+
+    switch (result.status) {
+      case "SUCCESS":
+        return sendResponse(
+          res,
+          {
+            success: true,
+            message: "Scholarship updated successfully",
+            data: result.data,
+          },
+          200
+        );
+      case "NOT_FOUND":
+        return sendResponse(res, { success: false, message: result.message }, 404);
+      case "SERVER_ERROR":
+        return sendResponse(res, { success: false, message: result.message }, 500);
+      default:
+        return sendResponse(
+          res,
+          { success: false, message: "Unexpected error occurred" },
+          500
+        );
+    }
+  } catch (error) {
+    console.error("Update Error:", error);
+    return sendResponse(
+      res,
+      { success: false, message: "Server error while updating scholarship" },
+      500
+    );
   }
 };
 

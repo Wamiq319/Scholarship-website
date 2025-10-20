@@ -1,16 +1,16 @@
 import express from "express";
 import {
+  AllScholarshipsGet,
   create,
   Delete,
-  getAll,
-  getById,
+  scholarshipGetById,
   update,
-} from "../controllers/scholar.controller.js";
+} from "../controllers/index.js";
 
 const router = express.Router();
 
-router.get("/", getAll);
-router.get("/:id", getById);
+router.get("/", AllScholarshipsGet);
+router.get("/:id", scholarshipGetById);
 router.post("/", create);
 router.put("/:id", update);
 router.delete("/:id", Delete);

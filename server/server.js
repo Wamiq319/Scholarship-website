@@ -7,6 +7,7 @@ import {
   userRoutes,
   authRoutes,
   scholarshipRoutes,
+  applicationRoutes,
 } from "./src/routes/index.js";
 import { deactivateExpiredScholarships } from "./src/utils/index.js";
 
@@ -61,7 +62,7 @@ mongoose
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
-  cron.schedule("0 0 * * *", deactivateExpiredScholarships);
+cron.schedule("0 0 * * *", deactivateExpiredScholarships);
 
 // Routes
 app.get("/api", (req, res) => {
@@ -70,6 +71,7 @@ app.get("/api", (req, res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/scholarships", scholarshipRoutes);
+app.use("/api/applications", applicationRoutes);
 
 // Server Start
 const PORT = process.env.PORT || 3000;

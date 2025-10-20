@@ -1,20 +1,91 @@
 import * as userService from "../services/index.js";
+import { sendResponse } from "../utils/index.js";
 
-// Register User
-export const registerUser = async (req, res) => {
-  try {
-    const { name, email, password, role } = req.body;
+export const AllUserGet = async (req, res) => {
+  const result = await userService.getAllUsers();
 
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
+  switch (result.status) {
+    case "SUCCESS":
+      return sendResponse(res, { success: true, data: result.data }, 200);
+    case "SERVER_ERROR":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        500
+      );
+    default:
+      return sendResponse(
+        res,
+        { success: false, message: "Unexpected error occurred" },
+        500
+      );
+  }
+};
 
-    const user = await userService.createUser({ name, email, password, role });
-    res.status(201).json({
-      message: "User registered successfully",
-      user,
-    });
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+export const UserGetById = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return sendResponse(res, { success: false, message: "id is required" });
+  }
+
+  const result = await userService.getUserById(id);
+
+  switch (result.status) {
+    case "SUCCESS":
+      return sendResponse(res, { success: true, data: result.data }, 200);
+    case "NOT_FOUND":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        404
+      );
+    case "SERVER_ERROR":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        500
+      );
+    default:
+      return sendResponse(
+        res,
+        { success: false, message: "Unexpected error occurred" },
+        500
+      );
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return sendResponse(res, { success: false, message: "id is required" });
+  }
+
+  const result = await userService.deleteUserById(id);
+
+  switch (result.status) {
+    case "SUCCESS":
+      return sendResponse(
+        res,
+        { success: true, message: "user deleted successfully" },
+        200
+      );
+    case "NOT_FOUND":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        404
+      );
+    case "SERVER_ERROR":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        500
+      );
+    default:
+      return sendResponse(
+        res,
+        { success: false, message: "Unexpected error occurred" },
+        500
+      );
   }
 };

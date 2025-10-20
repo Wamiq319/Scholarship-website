@@ -8,7 +8,7 @@ export const createScholarship = async ({
   amount,
   deadline,
   category,
-  isActive
+  isActive,
 }) => {
   try {
     const scholarship = new Scholarship({
@@ -18,7 +18,7 @@ export const createScholarship = async ({
       amount,
       deadline,
       category,
-      isActive
+      isActive,
     });
     const saved = await scholarship.save();
     return { status: "SUCCESS", data: saved };
@@ -53,7 +53,15 @@ export const getScholarshipById = async (id) => {
 // Update Scholarship
 export const updateScholarship = async (
   id,
-  { title, description, eligibilityCriteria, amount, deadline }
+  {
+    title,
+    description,
+    eligibilityCriteria,
+    amount,
+    deadline,
+    category,
+    isActive,
+  }
 ) => {
   try {
     const updated = await Scholarship.findByIdAndUpdate(
@@ -64,6 +72,8 @@ export const updateScholarship = async (
         eligibilityCriteria,
         amount,
         deadline,
+        category,
+        isActive,
       },
       {
         new: true,
