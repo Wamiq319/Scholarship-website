@@ -2,8 +2,8 @@
 
   export const SidebarMenus = {
     ADMIN: [
-      { label: "Scholarships", icon: FileText, path: "/admin" },
-      { label: "Manage Students", icon: Users, path: "/admin/students" },
+      { label: "Scholarship Management", icon: FileText, path: "/admin" },
+      { label: "User Management", icon: Users, path: "/admin/students" },
     ],
     STUDENT: [
       {
