@@ -47,24 +47,45 @@ const scholarshipFields = [
     defaultValue: "Other",
     required: true,
   },
-      {
-        label: "Description",
-        name: "description",
-        placeholder: "Enter scholarship description",
-        type: "textarea",
-        rows: 3,
-        required: true,
-        className: "md:col-span-2",
-      },
-      {
-        label: "Eligibility Criteria",
-        name: "eligibilityCriteria",
-        placeholder: "Enter eligibility details",
-        type: "textarea",
-        rows: 3,
-        required: true,
-        className: "md:col-span-2",
-      },];
+  {
+    label: "Minimum GPA",
+    name: "eligibilityCriteria.minGPA",
+    placeholder: "Enter minimum GPA (e.g. 3.0)",
+    type: "number",
+    step: "0.1",
+    required: true,
+  },
+  {
+    label: "Maximum Income",
+    name: "eligibilityCriteria.maxIncome",
+    placeholder: "Enter maximum family income",
+    type: "number",
+    required: true,
+  },
+  {
+    label: "Eligible Departments",
+    name: "eligibilityCriteria.department",
+    placeholder: "Enter eligible departments (comma separated)",
+    type: "text",
+    required: true,
+  },
+  {
+    label: "Eligible Semesters",
+    name: "eligibilityCriteria.semester",
+    placeholder: "Enter eligible semesters (comma separated)",
+    type: "text",
+    required: true,
+  },
+  {
+    label: "Description",
+    name: "description",
+    placeholder: "Enter scholarship description",
+    type: "textarea",
+    rows: 3,
+    required: true,
+    className: "md:col-span-2",
+  },
+];
 
 export const ScholarManagementPage = () => {
   const dispatch = useDispatch();
@@ -102,8 +123,34 @@ export const ScholarManagementPage = () => {
     }
   };
 
+  // handle form submit
   const handleCreateScholarship = (formData) => {
-    dispatch(createScholarship(formData));
+    // convert comma-separated strings into arrays
+    const departments =
+      formData["eligibilityCriteria.department"]
+        ?.split(",")
+        .map((d) => d.trim()) || [];
+
+    const semesters =
+      formData["eligibilityCriteria.semester"]
+        ?.split(",")
+        .map((n) => Number(n.trim())) || [];
+
+    const payload = {
+      title: formData.title,
+      amount: Number(formData.amount),
+      deadline: formData.deadline,
+      category: formData.category,
+      description: formData.description,
+      eligibilityCriteria: {
+        minGPA: Number(formData["eligibilityCriteria.minGPA"]),
+        maxIncome: Number(formData["eligibilityCriteria.maxIncome"]),
+        department: departments,
+        semester: semesters,
+      },
+    };
+
+    dispatch(createScholarship(payload));
   };
 
   return (
@@ -176,4 +223,3 @@ export const ScholarManagementPage = () => {
     </div>
   );
 };
-

@@ -14,6 +14,7 @@ const InputField = ({
   className = "",
   type = "text",
   rows = 6,
+  step,
   error,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -53,6 +54,7 @@ const InputField = ({
             type={getInputType()}
             name={name}
             placeholder={placeholder}
+            step={step}
             value={value}
             onChange={onChange}
             className={inputClasses}

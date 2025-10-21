@@ -63,10 +63,16 @@ export const Modal = ({
                 {secondaryActionText}
               </Button>
             )}
+            
             {showPrimaryActionButton && (
               <Button
                 type="submit"
-                form={formId}
+                onClick={() => {
+                  if (formId) {
+                    const form = document.getElementById(formId);
+                    form?.requestSubmit();
+                  }
+                }}
                 variant="filled"
                 color="blue"
                 disabled={isPrimaryActionLoading}
