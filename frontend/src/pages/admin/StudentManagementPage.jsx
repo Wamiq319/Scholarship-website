@@ -51,7 +51,6 @@ export const StudentsManagementPage = () => {
             { label: "Phone", key: "profile.phone" },
             { label: "GPA", key: "profile.gpa" },
             { label: "Family Income", key: "profile.familyIncome" },
-            { label: "Active", key: "isActive" },
           ]}
           tableData={data.users || []}
           buttons={[
