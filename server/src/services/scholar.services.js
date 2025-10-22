@@ -53,28 +53,12 @@ export const getScholarshipById = async (id) => {
 // Update Scholarship
 export const updateScholarship = async (
   id,
-  {
-    title,
-    description,
-    eligibilityCriteria,
-    amount,
-    deadline,
-    category,
-    isActive,
-  }
+  updateData
 ) => {
   try {
     const updated = await Scholarship.findByIdAndUpdate(
       id,
-      {
-        title,
-        description,
-        eligibilityCriteria,
-        amount,
-        deadline,
-        category,
-        isActive,
-      },
+     updateData,
       {
         new: true,
       }

@@ -137,6 +137,17 @@ export const createScholarship = (formData) =>
 export const deleteScholarship = (id) =>
   deleteResource({ resource: "scholarships", id });
 
+
+
+// ============================== applications shortcuts ==============================
+
+export const updateApplication = (id, formData) =>
+  updateResource({ resource: "applications", id, body: formData });
+
+
+export const deleteApplications = (id) =>
+  deleteResource({ resource: "applications", id });
+
 // ====================== SLICE ======================
 
 const storedAdmin = JSON.parse(localStorage.getItem("admin") || "null");

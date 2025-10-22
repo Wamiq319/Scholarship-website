@@ -1,8 +1,13 @@
 import { formatDate } from "@/utils";
 import React from "react";
-import Button from "@/components/ui/Button";
-
-const DataTable = ({ heading, tableHeader, tableData, buttons = [] }) => {
+import { Button } from ".";
+const DataTable = ({
+  heading,
+  tableHeader,
+  tableData,
+  buttons = [],
+  dynamicButtons,
+}) => {
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 w-full overflow-x-auto">
       {heading && (
@@ -20,7 +25,7 @@ const DataTable = ({ heading, tableHeader, tableData, buttons = [] }) => {
                 {col.label}
               </th>
             ))}
-            {buttons.length > 0 && (
+            {(buttons.length > 0 || dynamicButtons) && (
               <th className="px-4 py-3 border border-gray-200 text-center whitespace-nowrap">
                 Action
               </th>
@@ -30,81 +35,106 @@ const DataTable = ({ heading, tableHeader, tableData, buttons = [] }) => {
 
         <tbody>
           {tableData.length > 0 ? (
-            tableData.map((row, idx) => (
-              <tr
-                key={row._id || idx}
-                className="border-b hover:bg-gray-50 transition-colors"
-              >
-                {tableHeader.map((col, i) => {
-                  const value = row[col.key];
+            tableData.map((row, idx) => {
+              const rowButtons = dynamicButtons ? dynamicButtons(row) : buttons;
 
-                  // Boolean indicator
-                  if (typeof value === "boolean") {
-                    return (
-                      <td
-                        key={i}
-                        className="px-4 py-3 border border-gray-200 whitespace-nowrap"
-                      >
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            value
-                              ? "bg-green-100 text-green-700"
-                              : "bg-red-100 text-red-700"
-                          }`}
+              return (
+                <tr
+                  key={row._id || idx}
+                  className="border-b hover:bg-gray-50 transition-colors"
+                >
+                  {tableHeader.map((col, i) => {
+                    const getValue = (obj, path) =>
+                      path.split(".").reduce((acc, key) => acc?.[key], obj);
+
+                    const value = getValue(row, col.key);
+
+                    // Approved indicator
+                    if (col.key === "status" && value === "approved") {
+                      return (
+                        <td
+                          key={i}
+                          className="px-4 py-3 border border-gray-200 whitespace-nowrap"
                         >
-                          {value ? "Active" : "Inactive"}
-                        </span>
-                      </td>
-                    );
-                  }
+                          <span className="px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">
+                            Approved
+                          </span>
+                        </td>
+                      );
+                    }
 
-                  // Date formatting
-                  if (typeof value === "string" && value.includes("T")) {
+                    // Boolean indicator
+                    if (typeof value === "boolean") {
+                      return (
+                        <td
+                          key={i}
+                          className="px-4 py-3 border border-gray-200 whitespace-nowrap"
+                        >
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              value
+                                ? "bg-green-100 text-green-700"
+                                : "bg-red-100 text-red-700"
+                            }`}
+                          >
+                            {value ? "Active" : "Inactive"}
+                          </span>
+                        </td>
+                      );
+                    }
+
+                    // Date formatting
+                    if (
+                      typeof value === "string" &&
+                      /^\d{4}-\d{2}-\d{2}T/.test(value)
+                    ) {
+                      return (
+                        <td
+                          key={i}
+                          className="px-4 py-3 border border-gray-200 whitespace-nowrap"
+                        >
+                          {formatDate(value)}
+                        </td>
+                      );
+                    }
+
                     return (
                       <td
                         key={i}
                         className="px-4 py-3 border border-gray-200 whitespace-nowrap"
                       >
-                        {formatDate(value)}
+                        {value ?? "-"}
                       </td>
                     );
-                  }
+                  })}
 
-                  return (
-                    <td
-                      key={i}
-                      className="px-4 py-3 border border-gray-200 whitespace-nowrap"
-                    >
-                      {value ?? "-"}
+                  {(rowButtons.length > 0 || dynamicButtons) && (
+                    <td className="px-4 py-3 border border-gray-200 text-center">
+                      <div className="flex justify-center gap-2">
+                        {rowButtons.map((btn, idx) => (
+                          <Button
+                            key={idx}
+                            onClick={() => btn.onClick(row)}
+                            className={btn.className}
+                            color={btn.color || "blue"}
+                            variant={btn.variant || "filled"}
+                            rounded={btn.rounded ?? true}
+                            title={btn.title}
+                          >
+                            {btn.icon && <span>{btn.icon}</span>}
+                            {btn.text && <span>{btn.text}</span>}
+                          </Button>
+                        ))}
+                      </div>
                     </td>
-                  );
-                })}
-
-                {buttons.length > 0 && (
-                  <td className="px-4 py-3 border border-gray-200 text-center">
-                    <div className="flex justify-center gap-2">
-                      {buttons.map((btn, idx) => (
-                        <Button
-                          key={idx}
-                          onClick={() => btn.onClick(row)}
-                          className={btn.className}
-                          color={btn.color || "blue"}
-                          variant={btn.variant || "filled"}
-                          rounded={btn.rounded ?? true}
-                        >
-                          {btn.icon && <span>{btn.icon}</span>}
-                          {btn.text && <span>{btn.text}</span>}
-                        </Button>
-                      ))}
-                    </div>
-                  </td>
-                )}
-              </tr>
-            ))
+                  )}
+                </tr>
+              );
+            })
           ) : (
             <tr>
               <td
-                colSpan={tableHeader.length + (buttons.length > 0 ? 1 : 0)}
+                colSpan={tableHeader.length + 1}
                 className="p-6 text-center text-gray-500"
               >
                 No data available

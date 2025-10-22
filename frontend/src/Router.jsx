@@ -16,7 +16,8 @@ import {
   ApprovedApplicationsPage,
   CommitteeDashboard,
   PendingReviewsPage,
-  SettingsPage
+  SettingsPage,
+  ApplicationsManagementPage,
 } from "@/pages";
 import { StudentsManagementPage } from "./pages/admin/StudentManagementPage";
 
@@ -36,6 +37,10 @@ const AppRouter = () => {
           {/* Nested Routes (render inside <Outlet />) */}
           <Route index element={<ScholarManagementPage />} />
           <Route path="students" element={<StudentsManagementPage />} />
+          <Route
+            path="applicationmanagement"
+            element={<ApplicationsManagementPage />}
+          />
         </Route>
 
         {/* Student Routes */}
@@ -51,7 +56,6 @@ const AppRouter = () => {
           <Route path="approved" element={<ApprovedApplicationsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
-
       </Routes>
     </Router>
   );
