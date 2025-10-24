@@ -53,6 +53,8 @@ export const Modal = ({
         {/* Footer */}
         {(showPrimaryActionButton || showSecondaryActionButton) && (
           <div className="flex justify-end gap-3 p-6 border-t border-gray-200">
+
+            
             {showSecondaryActionButton && (
               <Button
                 onClick={onSecondaryAction || onClose}

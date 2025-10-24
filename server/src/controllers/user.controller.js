@@ -89,3 +89,41 @@ export const deleteUser = async (req, res) => {
       );
   }
 };
+
+export const updateUser = async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+
+  const result = await userService.updateUserById(id, updateData);
+
+  switch (result.status) {
+    case "SUCCESS":
+      return sendResponse(
+        res,
+        {
+          success: true,
+          message: "User updated successfully",
+          data: result.data,
+        },
+        200
+      );
+    case "NOT_FOUND":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        404
+      );
+    case "SERVER_ERROR":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        500
+      );
+    default:
+      return sendResponse(
+        res,
+        { success: false, message: "Unexpected error occurred" },
+        500
+      );
+  }
+};

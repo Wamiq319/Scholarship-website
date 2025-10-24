@@ -41,3 +41,15 @@ export const deleteUserById = async (id) => {
     return { status: "SERVER_ERROR", message: error.message };
   }
 };
+
+export const updateUserById = async (id, updateData) => {
+  try {
+    const updated = await User.findByIdAndUpdate(id, updateData, { new: true });
+    if (!updated) {
+      return { status: "NOT_FOUND", message: "User not found" };
+    }
+    return { status: "SUCCESS", data: updated };
+  } catch (error) {
+    return { status: "SERVER_ERROR", message: error.message };
+  }
+};

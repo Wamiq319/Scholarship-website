@@ -22,7 +22,14 @@ export const registerUser = createAsyncThunk(
         body: JSON.stringify(formData),
         credentials: "include",
       });
+
       const { data, success, message } = await handleApiResponse(res);
+
+      // 👇 save login user data after register
+      if (success) {
+        localStorage.setItem("user", JSON.stringify(data));
+      }
+
       return { data, success, message };
     } catch (err) {
       return rejectWithValue(err.message);
@@ -41,8 +48,13 @@ export const login = createAsyncThunk(
         body: JSON.stringify(credentials),
         credentials: "include",
       });
+
       const { data, success, message } = await handleApiResponse(res);
-      if (success) localStorage.setItem("admin", JSON.stringify(data));
+
+      if (success) {
+        localStorage.setItem("user", JSON.stringify(data));
+      }
+
       return { data, success, message };
     } catch (err) {
       return rejectWithValue(err.message);
@@ -52,7 +64,7 @@ export const login = createAsyncThunk(
 
 // --- Logout ---
 export const logout = createAsyncThunk("resources/logout", async () => {
-  localStorage.removeItem("admin");
+  localStorage.removeItem("user");
 });
 
 // ====================== GENERIC CRUD ======================
@@ -130,20 +142,18 @@ export const deleteResource = createAsyncThunk(
 
 // ====================== SCHOLARSHIP SHORTCUTS ======================
 
-
 export const createScholarship = (formData) =>
   createResource({ resource: "scholarships", body: formData });
 
 export const deleteScholarship = (id) =>
   deleteResource({ resource: "scholarships", id });
 
-
-
 // ============================== applications shortcuts ==============================
+export const createApplication = (formData) =>
+  createResource({ resource: "applications/apply", body: formData });
 
 export const updateApplication = (id, formData) =>
   updateResource({ resource: "applications", id, body: formData });
-
 
 export const deleteApplications = (id) =>
   deleteResource({ resource: "applications", id });
@@ -227,9 +237,24 @@ const resourcesSlice = createSlice({
       // --- Update ---
       .addCase(updateResource.fulfilled, (state, action) => {
         const { resource, id, data } = action.payload;
-        state.data[resource] = state.data[resource].map((item) =>
-          item._id === id ? { ...item, ...data } : item
-        );
+
+        // if resource is an array, update the specific item
+        if (Array.isArray(state.data[resource])) {
+          state.data[resource] = state.data[resource].map((item) =>
+            item._id === id ? { ...item, ...data } : item
+          );
+        }
+        // if resource is an object, merge the updates
+        else if (
+          state.data[resource] &&
+          typeof state.data[resource] === "object"
+        ) {
+          state.data[resource] = { ...state.data[resource], ...data };
+        }
+        //  if resource does not exist, initialize it
+        else {
+          state.data[resource] = data;
+        }
       })
 
       // --- Delete ---

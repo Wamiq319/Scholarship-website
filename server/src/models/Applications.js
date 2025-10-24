@@ -27,8 +27,8 @@ const applicationSchema = new mongoose.Schema(
     ],
     documents: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Document",
+        type: String, // array of document URLs
+        default: "document_url_placeholder",
       },
     ],
     tracking: [

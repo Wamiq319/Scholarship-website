@@ -10,6 +10,14 @@ import { sendResponse } from "../utils/index.js";
 export const ScholarshipApply = async (req, res) => {
   const { scholarshipId, studentId, documents } = req.body;
 
+  if (scholarshipId === undefined || studentId === undefined) {
+    return sendResponse(
+      res,
+      { success: false, message: "scholarshipId and studentId are required" },
+      400
+    );
+  }
+
   const result = await applyForScholarship(scholarshipId, studentId, documents);
 
   switch (result.status) {

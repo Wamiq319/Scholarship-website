@@ -1,7 +1,96 @@
-import React from 'react'
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateResource } from "@/redux/slices/resourcesSLice";
+import { Button, FormModal } from "@/components";
 
 export const StudentProfilePage = () => {
+  const dispatch = useDispatch();
+
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+
+  console.log(storedUser);
+
+  const { data = storedUser } = useSelector((state) => state.auth || {});
+
+  console.log(data);
+
+  const initialData = {
+    department: data?.department || "",
+    rollNo: data?.rollNo || "",
+    phone: data?.profile?.phone || "",
+    address: data?.profile?.address || "",
+    gpa: data.profile?.gpa || "",
+    familyIncome: data?.profile?.familyIncome || "",
+  };
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (formData) => {
+    setIsSubmitting(true);
+
+    const body = {
+      department: formData.department,
+      rollNo: formData.rollNo,
+      profile: {
+        phone: formData.phone,
+        address: formData.address,
+        gpa: Number(formData.gpa),
+        familyIncome: Number(formData.familyIncome),
+      },
+    };
+
+    const result = await dispatch(
+      updateResource({ resource: "users", id: data._id, body })
+    );
+
+    if (result.payload?.success) {
+      const updatedUser = result.payload.data;
+      console.log(updatedUser);
+      
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+     
+    }
+
+    setIsSubmitting(false);
+  };
+
+  const fields = [
+    { name: "department", label: "Department", type: "text", required: true },
+    { name: "rollNo", label: "Roll No", type: "text", required: true },
+    { name: "phone", label: "Phone Number", type: "text", required: true },
+    { name: "address", label: "Address", type: "text", required: true },
+    { name: "gpa", label: "GPA", type: "number", required: true },
+    {
+      name: "familyIncome",
+      label: "Family Income",
+      type: "number",
+      required: true,
+    },
+  ];
+
   return (
-    <div>StudentProfile</div>
-  )
-}
+    <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+        Update Your Profile
+      </h2>
+
+      <FormModal
+        initialData={initialData}
+        fields={fields}
+        onSubmit={handleSubmit}
+        formId="student-profile-form"
+      >
+        <div className="mt-6 flex justify-end">
+          <Button
+            type="submit"
+            variant="filled"
+            color="blue"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Updating..." : "Update Profile"}
+          </Button>
+        </div>
+      </FormModal>
+    </div>
+  );
+};

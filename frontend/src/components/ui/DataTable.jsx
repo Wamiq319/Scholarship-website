@@ -57,7 +57,7 @@ const DataTable = ({
                           className="px-4 py-3 border border-gray-200 whitespace-nowrap"
                         >
                           <span className="px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">
-                            Approved
+                            {value.charAt(0).toUpperCase() + value.slice(1)}
                           </span>
                         </td>
                       );

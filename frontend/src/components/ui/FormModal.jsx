@@ -8,6 +8,7 @@ const FormModal = ({
   fields = [],
   onSubmit,
   formId,
+  children,
 }) => {
   const [formData, setFormData] = useState(initialData);
   const [validationError, setValidationError] = useState("");
@@ -81,6 +82,7 @@ const FormModal = ({
       {validationError && (
         <p className="text-red-600 text-sm">{validationError}</p>
       )}
+      {children && <div>{children}</div>}
     </form>
   );
 };

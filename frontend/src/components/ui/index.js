@@ -1,5 +1,6 @@
-export { default as Button } from './Button';
-export { default as ConfirmationModal } from './ConfirmationModal';
-export { default as DataTable } from './DataTable';
-export { Modal } from './Modal';
-export { default as FormModal } from './FormModal';
+export { default as Button } from "./Button";
+export { default as ConfirmationModal } from "./ConfirmationModal";
+export { default as DataTable } from "./DataTable";
+export { Modal } from "./Modal";
+export { default as FormModal } from "./FormModal";
+export { default as Card } from "./Card";
