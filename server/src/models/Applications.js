@@ -25,12 +25,18 @@ const applicationSchema = new mongoose.Schema(
         ref: "User", // committee members
       },
     ],
-    documents: [
-      {
-        type: String, // array of document URLs
-        default: "document_url_placeholder",
-      },
-    ],
+    documents: {
+      CNIC: String,
+      feeChallan: String,
+      bankInvoice: String,
+      incomeCertificate: String,
+      resultCard: String,
+    },
+    eligibilityReason: { 
+      type: String, 
+      required: true, 
+      trim: true 
+    },
     tracking: [
       {
         stage: String, // e.g., "submitted", "verified"

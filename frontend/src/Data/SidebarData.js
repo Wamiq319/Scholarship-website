@@ -2,26 +2,26 @@ import { Users, FileText, Settings, ClipboardList } from "lucide-react";
 
 export const SidebarMenus = {
   ADMIN: [
-    { label: "Scholarship Management", icon: FileText, path: "/admin" },
-    { label: "User Management", icon: Users, path: "/admin/students" },
+    { label: "Scholarship Management", Icon: FileText, path: "/admin" },
+    { label: "User Management", Icon: Users, path: "/admin/students" },
     {
       label: "Application Management",
-      icon: Users,
+      Icon: Users,
       path: "/admin/applicationmanagement",
     },
   ],
   STUDENT: [
     {
       label: "Available Scholarships",
-      icon: FileText,
+      Icon: FileText,
       path: "/student",
     },
     {
       label: "My Applications",
-      icon: ClipboardList,
+      Icon: ClipboardList,
       path: "/student/applications",
     },
-    { label: "Profile", icon: Users, path: "/student/profile" },
+    { label: "Profile", Icon: Users, path: "/student/profile" },
   ],
   COMMITTEE: [
     {
@@ -34,6 +34,6 @@ export const SidebarMenus = {
       icon: FileText,
       path: "/committee/approved",
     },
-    { label: "Settings", icon: Settings, path: "/committee/settings" },
+    { label: "Settings", Icon: Settings, path: "/committee/settings" },
   ],
 };

@@ -18,8 +18,9 @@ import {
   PendingReviewsPage,
   SettingsPage,
   ApplicationsManagementPage,
+  ScholarshipApplicationPage,
+  StudentsManagementPage,
 } from "@/pages";
-import { StudentsManagementPage } from "./pages/admin/StudentManagementPage";
 
 const AppRouter = () => {
   return (
@@ -27,6 +28,11 @@ const AppRouter = () => {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/scholarships" element={<Scholarships />} />
+        <Route
+          path="/scholarships/apply/:id"
+          element={<ScholarshipApplicationPage />}
+        />
+
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<LoginPage />} />

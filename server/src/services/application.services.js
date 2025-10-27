@@ -1,17 +1,20 @@
 import { Application } from "../models/index.js";
+import cloudinary from "../utils/cloudinary.config.js";
 
 // Student applies for a scholarship
 export const applyForScholarship = async (
   scholarshipId,
   studentId,
-  documents
+  documents,
+  eligibilityReason
 ) => {
   try {
-    //  Prevent duplicate application
+    // Prevent duplicate application
     const alreadyApplied = await Application.findOne({
       scholarshipId,
       studentId,
     });
+
     if (alreadyApplied) {
       return {
         status: "CONFLICT",
@@ -19,11 +22,29 @@ export const applyForScholarship = async (
       };
     }
 
-    //  Create new application
+    // --- Upload all documents to Cloudinary ---
+    const uploadedDocs = {};
+    for (const key in documents) {
+      const file = documents[key];
+      if (!file) continue;
+
+      try {
+        const uploadResponse = await cloudinary.uploader.upload(file);
+        uploadedDocs[key] = uploadResponse.secure_url;
+      } catch (err) {
+        return {
+          status: "UPLOAD_ERROR",
+          message: `Failed to upload ${key}: ${err.message}`,
+        };
+      }
+    }
+
+    // --- Create new application with uploaded document URLs ---
     const newApplication = await Application.create({
       scholarshipId,
       studentId,
-      documents,
+      eligibilityReason,
+      documents: uploadedDocs,
       tracking: [
         {
           stage: "submitted",
@@ -80,7 +101,6 @@ export const applicationUpdate = async (id, updateData) => {
     return { status: "SERVER_ERROR", message: error.message };
   }
 };
-
 
 export const deleteApplicationById = async (id) => {
   try {

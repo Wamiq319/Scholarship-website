@@ -1,61 +1,18 @@
-import { Card, FormModal, Modal } from "@/components";
-import {
-  createApplication,
-  fetchResources,
-} from "@/redux/slices/resourcesSLice";
-import React, { useEffect, useState } from "react";
+import { Card } from "@/components";
+import { fetchResources } from "@/redux/slices/resourcesSLice";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-const applicationFields = [
-  // TODO: Replace this text input with file upload system (img etc.)
-  {
-    label: "Documents",
-    name: "documents",
-    placeholder: "TODO: Replace this...",
-    type: "text",
-  },
-];
+import { useNavigate } from "react-router-dom";
 
 export const AvailableScholarshipsPage = () => {
   const dispatch = useDispatch();
 
-  const { data, status, error } = useSelector((state) => state.resources);
-
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedScholarship, setSelectedScholarship] = useState(null);
-  const formId = "application-form";
-
-  const user = localStorage.getItem("user");
+  const { data, status } = useSelector((state) => state.resources);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchResources({ resource: "scholarships" }));
   }, [dispatch]);
-
-  useEffect(() => {
-    if (status === "succeeded" && isFormOpen) {
-      setIsFormOpen(false);
-    }
-  }, [status]);
-
-  const handleApplyScholarship = (formData) => {
-    const documents = formData.documents?.split(",").map((d) => d.trim()) || [];
-
-    const payload = {
-      scholarshipId: selectedScholarship?._id,
-      studentId: user ? JSON.parse(user)._id : null,
-      documents,
-      tracking: [
-        {
-          stage: "submitted",
-          remarks: "Application submitted",
-        },
-      ],
-    };
-
-    dispatch(createApplication(payload));
-    console.log("Application Payload:", payload);
-    // dispatch(createApplication(payload));
-  };
 
   const actions = [
     {
@@ -70,21 +27,12 @@ export const AvailableScholarshipsPage = () => {
       onClick: (scholarship) => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
 
-        const profile = storedUser?.profile || {};
-        const profileIncomplete =
-          !profile.gpa ||
-          !profile.familyIncome ||
-          !profile.address ||
-          !storedUser.department;
-
-        if (profileIncomplete) {
-          alert("Please complete your profile before applying.");
-          window.location.href = "/student/profile";
+        if (!storedUser || storedUser.role.toLowerCase() !== "student") {
+          navigate("/login");
           return;
         }
 
-        setSelectedScholarship(scholarship);
-        setIsFormOpen(true);
+        navigate(`/scholarships/apply/${scholarship._id}`);
       },
     },
   ];
@@ -128,26 +76,6 @@ export const AvailableScholarshipsPage = () => {
           />
         ))
       )}
-
-      <Modal
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        headerTitle={`Apply for ${selectedScholarship?.title || "Scholarship"}`}
-        size="lg"
-        formId={formId}
-        onSecondaryAction={() => setIsFormOpen(false)}
-        isPrimaryActionLoading={status === "loading"}
-        primaryActionText="Submit Application"
-        showPrimaryActionButton={true}
-        showSecondaryActionButton={true}
-        error={error}
-      >
-        <FormModal
-          formId={formId}
-          fields={applicationFields}
-          onSubmit={handleApplyScholarship}
-        />
-      </Modal>
     </div>
   );
 };

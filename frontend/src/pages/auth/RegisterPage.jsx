@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Navbar, Footer, Dropdown } from "@/components";
-import {Button} from "@/components";
+import { Button } from "@/components";
 import logo from "@/assets/LOGO.png";
 import { registerUser } from "@/redux/slices/resourcesSLice";
 import { InputField } from "@/components";
@@ -13,16 +13,33 @@ const RegisterPage = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "STUDENT", // default role
+    role: "STUDENT",
+    department: "",
+    rollNo: "",
+    profile: {
+      phone: "",
+      address: "",
+      gpa: "",
+      familyIncome: "",
+    },
   });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { status, error } = useSelector((state) => state.resources);
 
-
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name.includes("profile.")) {
+      const field = name.split(".")[1];
+      setFormData({
+        ...formData,
+        profile: { ...formData.profile, [field]: value },
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -111,28 +128,72 @@ const RegisterPage = () => {
                 placeholder="Confirm password"
               />
 
-              {/* Role selection */}
-              <Dropdown
-               label="Select Role"
-               options={[
-               { label: "Student", value: "STUDENT" },
-               { label: "Committee", value: "COMMITTEE" },
-               ]}
-                selectedValue={formData.role}
-                onChange={(val) => setFormData({ ...formData, role: val })}
+              <InputField
+                label="Department"
+                name="department"
+                type="text"
+                value={formData.department}
+                onChange={handleChange}
+                placeholder="Enter your department"
               />
 
-             <Button
-  type="submit"
-  color="blue"
-  variant="filled"
-  rounded
-  className={`w-full py-3 text-lg ${status === "loading" ? "opacity-50 cursor-not-allowed" : ""}`}
-  onClick={handleSubmit}
->
-  {status === "loading" ? "Creating account..." : "Register"}
-</Button>
+              <InputField
+                label="Roll Number"
+                name="rollNo"
+                type="text"
+                value={formData.rollNo}
+                onChange={handleChange}
+                placeholder="Enter your roll number"
+              />
 
+              <InputField
+                label="Phone Number"
+                name="profile.phone"
+                type="text"
+                value={formData.profile.phone}
+                onChange={handleChange}
+                placeholder="Enter your phone number"
+              />
+
+              <InputField
+                label="Address"
+                name="profile.address"
+                type="text"
+                value={formData.profile.address}
+                onChange={handleChange}
+                placeholder="Enter your address"
+              />
+
+              <InputField
+                label="GPA"
+                name="profile.gpa"
+                type="number"
+                value={formData.profile.gpa}
+                onChange={handleChange}
+                placeholder="Enter your GPA"
+              />
+
+              <InputField
+                label="Family Income"
+                name="profile.familyIncome"
+                type="number"
+                value={formData.profile.familyIncome}
+                onChange={handleChange}
+                placeholder="Enter family income"
+              />
+
+              <Button
+                type="submit"
+                color="blue"
+                variant="filled"
+                rounded
+                className={`w-full py-3 text-lg ${
+                  status === "loading" ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                onClick={handleSubmit}
+              >
+                {status === "loading" ? "Creating account..." : "Register"}
+              </Button>
 
               {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
 

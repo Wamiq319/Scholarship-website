@@ -13,6 +13,7 @@ const FormModal = ({
   const [formData, setFormData] = useState(initialData);
   const [validationError, setValidationError] = useState("");
 
+  // initialize default values
   useEffect(() => {
     const defaultState = {};
     fields.forEach((field) => {
@@ -21,15 +22,18 @@ const FormModal = ({
     setFormData({ ...defaultState, ...initialData });
   }, [fields, initialData]);
 
+  // Normal field change (text, textarea, password, etc.)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  //  Dropdown select change
   const handleDropdownChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  //  Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -44,6 +48,7 @@ const FormModal = ({
     onSubmit(formData);
   };
 
+  //  Field renderer (supports dropdown + all input types including image)
   const renderField = (field) => {
     const { type, ...props } = field;
     const value = formData[props.name] || "";
@@ -57,6 +62,18 @@ const FormModal = ({
             onChange={(val) => handleDropdownChange(props.name, val)}
           />
         );
+
+      // handle image upload using InputField
+      case "image":
+        return (
+          <InputField
+            {...props}
+            type="image"
+            value={value}
+            onChange={handleChange}
+          />
+        );
+
       default:
         return (
           <InputField

@@ -8,9 +8,13 @@ import { sendResponse } from "../utils/index.js";
 
 // Student applies for a scholarship
 export const ScholarshipApply = async (req, res) => {
-  const { scholarshipId, studentId, documents } = req.body;
+  const { scholarshipId, studentId, documents, eligibilityReason } = req.body;
 
-  if (scholarshipId === undefined || studentId === undefined) {
+  if (
+    scholarshipId === undefined ||
+    studentId === undefined ||
+    eligibilityReason === undefined
+  ) {
     return sendResponse(
       res,
       { success: false, message: "scholarshipId and studentId are required" },
@@ -18,7 +22,12 @@ export const ScholarshipApply = async (req, res) => {
     );
   }
 
-  const result = await applyForScholarship(scholarshipId, studentId, documents);
+  const result = await applyForScholarship(
+    scholarshipId,
+    studentId,
+    documents,
+    eligibilityReason
+  );
 
   switch (result.status) {
     case "SUCCESS":
@@ -36,6 +45,12 @@ export const ScholarshipApply = async (req, res) => {
         res,
         { success: false, message: result.message },
         409
+      );
+    case "UPLOAD_ERROR":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        500
       );
     case "SERVER_ERROR":
       return sendResponse(

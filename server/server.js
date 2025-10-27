@@ -31,8 +31,8 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use(express.json());
-
+app.use(express.json({ limit: "30mb" }));
+app.use(express.urlencoded({ limit: "30mb", extended: true }));
 // Middleware to log incoming requests
 app.use((req, res, next) => {
   const { method, originalUrl, body } = req;
@@ -72,6 +72,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/scholarships", scholarshipRoutes);
 app.use("/api/applications", applicationRoutes);
+
+
 
 // Server Start
 const PORT = process.env.PORT || 3000;

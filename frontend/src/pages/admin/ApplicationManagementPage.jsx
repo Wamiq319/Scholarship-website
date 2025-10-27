@@ -44,7 +44,7 @@ export const ApplicationsManagementPage = () => {
             stage: "rejected",
             // ToDo: replace with actual admin user id
             updatedBy: "68ebd2d781cba88fff5c263d",
-            remarks: "Application rejected successfully",
+            remarks: "Application rejected",
           },
         ],
       })
@@ -143,6 +143,12 @@ export const ApplicationsManagementPage = () => {
         className: "bg-blue-500 hover:bg-blue-600 text-white",
         onClick: handleView,
         title: "View",
+      },
+      {
+        icon: <FaTrash />,
+        className: "bg-red-600 hover:bg-red-700 text-white",
+        onClick: handleDelete,
+        title: "Delete",
       },
     ];
   };

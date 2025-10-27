@@ -85,6 +85,22 @@ export const fetchResources = createAsyncThunk(
   }
 );
 
+// fetch By Id
+export const fetchResourceById = createAsyncThunk(
+  "resources/fetchById",
+  async ({ resource, id }, { rejectWithValue }) => {
+    try {
+      const res = await fetch(`${API_URL}/api/${resource}/${id}`, {
+        credentials: "include",
+      });
+      const { data, success, message } = await handleApiResponse(res);
+      return { resource, data, success, message };
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 // --- Create Resource ---
 export const createResource = createAsyncThunk(
   "resources/create",
@@ -255,6 +271,17 @@ const resourcesSlice = createSlice({
         else {
           state.data[resource] = data;
         }
+      })
+
+      // --- Fetch by ID ---
+      .addCase(fetchResourceById.fulfilled, (state, action) => {
+        const { resource, data } = action.payload;
+        state.data[`${resource}ById`] = data;
+        state.status = "succeeded";
+      })
+      .addCase(fetchResourceById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       })
 
       // --- Delete ---

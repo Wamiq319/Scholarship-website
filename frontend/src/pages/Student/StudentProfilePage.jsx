@@ -8,11 +8,7 @@ export const StudentProfilePage = () => {
 
   const storedUser = JSON.parse(localStorage.getItem("user"));
 
-  console.log(storedUser);
-
   const { data = storedUser } = useSelector((state) => state.auth || {});
-
-  console.log(data);
 
   const initialData = {
     department: data?.department || "",
@@ -45,10 +41,8 @@ export const StudentProfilePage = () => {
 
     if (result.payload?.success) {
       const updatedUser = result.payload.data;
-      console.log(updatedUser);
-      
+
       localStorage.setItem("user", JSON.stringify(updatedUser));
-     
     }
 
     setIsSubmitting(false);

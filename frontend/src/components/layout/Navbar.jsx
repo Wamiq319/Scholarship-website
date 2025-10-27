@@ -13,6 +13,8 @@ const navLinks = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+
   return (
     <nav className="bg-white shadow-md border-b border-gray-100">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
@@ -38,11 +40,27 @@ const Navbar = () => {
 
         {/* Desktop Login Button */}
         <div className="hidden md:block">
-          <Link to="/login">
-            <Button color="blue" variant="filled" rounded>
-              Login
-            </Button>
-          </Link>
+          {storedUser ? (
+            <Link
+              to={`/${
+                storedUser.role === "ADMIN"
+                  ? "admin"
+                  : storedUser.role === "COMMITTEE"
+                  ? "committee"
+                  : "student"
+              }`}
+            >
+              <Button color="gold" variant="filled" rounded>
+                Dashboard
+              </Button>
+            </Link>
+          ) : (
+            <Link to="/login">
+              <Button color="blue" variant="filled" rounded>
+                Login
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
