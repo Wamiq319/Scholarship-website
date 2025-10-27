@@ -6,6 +6,17 @@ import {
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import {
+  DollarSign,
+  CalendarDays,
+  Users,
+  CheckCircle,
+  Target,
+  Building2,
+  GraduationCap,
+  Info,
+  AlertCircle,
+} from "lucide-react";
 
 const ScholarshipApplicationPage = () => {
   const { id } = useParams();
@@ -26,9 +37,12 @@ const ScholarshipApplicationPage = () => {
   if (loading || !scholarship)
     return (
       <div className="flex justify-center items-center h-screen bg-gray-50">
-        <p className="text-gray-500 text-lg animate-pulse">
-          Loading scholarship details...
-        </p>
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-gray-600 text-lg mt-4">
+            Loading scholarship details...
+          </p>
+        </div>
       </div>
     );
 
@@ -60,7 +74,6 @@ const ScholarshipApplicationPage = () => {
     };
 
     dispatch(createApplication(formData));
-
     form.reset();
   };
 
@@ -105,7 +118,6 @@ const ScholarshipApplicationPage = () => {
       required: true,
       disabled: true,
     },
-
     {
       name: "familyIncome",
       label: "Family Income",
@@ -121,12 +133,7 @@ const ScholarshipApplicationPage = () => {
       placeholder: "Explain why you deserve this scholarship...",
       required: true,
     },
-    {
-      label: "CNIC Picture",
-      name: "CNIC",
-      type: "image",
-      required: true,
-    },
+    { label: "CNIC Picture", name: "CNIC", type: "image", required: true },
     {
       label: "University Fee Challan",
       name: "feeChallan",
@@ -152,117 +159,169 @@ const ScholarshipApplicationPage = () => {
       required: true,
     },
   ];
+
   return (
-    <div className="bg-gray-50 min-h-screen ">
+    <div className="bg-gray-50 min-h-screen">
       <Navbar />
 
-      {/* Scholarship Details */}
-      <div className="max-w-4xl mx-auto px-6 py-10">
-        <div className="p-8 rounded-lg border border-gray-100 bg-white">
-          <h1 className="text-3xl font-extrabold mb-2 text-blue-700">
-            {title}
-          </h1>
-          <p className="text-sm text-gray-600 mb-4">{category}</p>
-          <div className="flex flex-wrap gap-3 text-sm">
-            <span className="px-3 py-1 rounded-full border border-yellow-200 bg-yellow-50">
-              Amount: <strong>Rs. {amount}</strong>
-            </span>
-            <span className="px-3 py-1 rounded-full border border-yellow-200 bg-yellow-50">
-              Deadline:{" "}
-              <strong>{new Date(deadline).toLocaleDateString()}</strong>
-            </span>
-            <span className="px-3 py-1 rounded-full border border-yellow-200 bg-yellow-50">
-              Applicants: <strong>{applicantsCount}</strong>
-            </span>
-            <span
-              className={`px-3 py-1 rounded-full border ${
-                isActive
-                  ? "bg-green-100 border-green-300 text-green-700"
-                  : "bg-red-100 border-red-300 text-red-700"
-              }`}
-            >
-              {isActive ? "Active" : "Closed"}
-            </span>
-          </div>
-        </div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Application Form */}
+            {isActive ? (
+              <div className="p-8 bg-white rounded-2xl shadow-lg border border-gray-200">
+                <h2 className="text-2xl font-bold text-gray-700 mb-6">
+                  Apply for this Scholarship
+                </h2>
+                <FormModal
+                  formId="applyForm"
+                  fields={feildsData}
+                  onSubmit={handleFormSubmit}
+                >
+                  <div className="mt-8 flex justify-end">
+                    <Button
+                      type="submit"
+                      variant="filled"
+                      color="blue"
+                      size="lg"
+                    >
+                      Submit Application
+                    </Button>
+                  </div>
+                </FormModal>
 
-        <div className="mt-8 p-6 rounded-lg border border-gray-100 bg-white">
-          <h2 className="text-2xl font-semibold mb-3 text-blue-700">
-            Description
-          </h2>
-          <p className="text-gray-700 leading-relaxed">{description}</p>
-        </div>
-
-        {eligibilityCriteria && (
-          <div className="mt-8 p-6 rounded-lg border border-gray-100 bg-white">
-            <h2 className="text-2xl font-semibold mb-3 text-blue-700">
-              Eligibility Criteria
-            </h2>
-            <ul className="list-disc list-inside text-gray-700 space-y-2">
-              {eligibilityCriteria.minGPA && (
-                <li>
-                  <strong>Minimum GPA:</strong> {eligibilityCriteria.minGPA}
-                </li>
-              )}
-              {eligibilityCriteria.maxIncome && (
-                <li>
-                  <strong>Maximum Family Income:</strong> Rs.{" "}
-                  {eligibilityCriteria.maxIncome}
-                </li>
-              )}
-              {eligibilityCriteria.department?.length > 0 && (
-                <li>
-                  <strong>Eligible Departments:</strong>{" "}
-                  {eligibilityCriteria.department.join(", ")}
-                </li>
-              )}
-              {eligibilityCriteria.semester?.length > 0 && (
-                <li>
-                  <strong>Eligible Semesters:</strong>{" "}
-                  {eligibilityCriteria.semester.join(", ")}
-                </li>
-              )}
-            </ul>
-          </div>
-        )}
-
-        {/*Application Form */}
-        {isActive ? (
-          <div className="mt-12 p-8 rounded-lg border border-gray-100 bg-white">
-            <h2 className="text-2xl font-semibold mb-6 text-blue-700">
-              Apply for this Scholarship
-            </h2>
-            <FormModal
-              formId="applyForm"
-              fields={feildsData}
-              onSubmit={handleFormSubmit}
-            >
-              <div className="mt-6 flex justify-end">
-                <Button type="submit" variant="filled" color="blue">
-                  submit Application
-                </Button>
+                <div className="mt-4 text-center">
+                  {status === "loading" && (
+                    <p className="text-blue-600 animate-pulse">
+                      Submitting application...
+                    </p>
+                  )}
+                  {status === "failed" && (
+                    <p className="text-red-600 flex items-center justify-center">
+                      <AlertCircle className="w-4 h-4 mr-2" />
+                      {error || "Something went wrong."}
+                    </p>
+                  )}
+                </div>
               </div>
-            </FormModal>
+            ) : (
+              <div className="mt-8 text-center text-red-600 text-lg font-medium p-8 rounded-2xl border-2 border-red-200 bg-red-50">
+                This scholarship is currently closed for applications.
+              </div>
+            )}
+          </div>
 
-            <div className="mt-4">
-              {status === "loading" && (
-                <p className="text-blue-600 animate-pulse">
-                  Submitting application...
-                </p>
-              )}
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="space-y-8 sticky top-24">
+              <div className="p-8 bg-white rounded-2xl shadow-lg border border-gray-200">
+                <span className="inline-block bg-indigo-100 text-indigo-800 text-sm font-semibold mb-4 px-4 py-1 rounded-full">
+                  {category}
+                </span>
+                <h1 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 py-2">
+                  {title}
+                </h1>
+                <div className="mt-6">
+                  <h2 className="text-2xl font-bold text-blue-900 mb-3 flex items-center">
+                    <Info className="w-5 h-5 mr-3 text-blue-500" />
+                    Description
+                  </h2>
+                  <p className="text-gray-600 leading-relaxed">{description}</p>
+                </div>
+              </div>
+              <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl shadow-lg border border-blue-200">
+                <h2 className="text-2xl font-bold text-indigo-900 mb-5 flex items-center">
+                  <Info className="w-5 h-5 mr-3 text-blue-500" />
+                  Scholarship Details
+                </h2>
+                <div className="space-y-4 text-sm">
+                  <div className="flex items-center text-gray-700">
+                    <DollarSign className="w-5 h-5 mr-3 text-green-500" />
+                    <span>Amount:</span>
+                    <strong className="ml-auto text-green-600 font-bold text-base">
+                      Rs. {amount}
+                    </strong>
+                  </div>
+                  <div className="flex items-center text-gray-700">
+                    <CalendarDays className="w-5 h-5 mr-3 text-red-500" />
+                    <span>Deadline:</span>
+                    <strong className="ml-auto font-semibold">
+                      {new Date(deadline).toLocaleDateString()}
+                    </strong>
+                  </div>
+                  <div className="flex items-center text-gray-700">
+                    <Users className="w-5 h-5 mr-3 text-yellow-500" />
+                    <span>Applicants:</span>
+                    <strong className="ml-auto font-semibold">
+                      {applicantsCount}
+                    </strong>
+                  </div>
+                  <div className="flex items-center text-gray-700">
+                    <CheckCircle className="w-5 h-5 mr-3" />
+                    <span>Status:</span>
+                    <span
+                      className={`ml-auto px-3 py-1 text-xs font-bold rounded-full border ${
+                        isActive
+                          ? "bg-green-100 border-green-300 text-green-700"
+                          : "bg-red-100 border-red-300 text-red-700"
+                      }`}
+                    >
+                      {isActive ? "Active" : "Closed"}
+                    </span>
+                  </div>
+                </div>
 
-              {status === "failed" && (
-                <p className="text-red-600">
-                  {error || "Something went wrong."}
-                </p>
-              )}
+                {eligibilityCriteria && (
+                  <div className="mt-6 pt-6 border-t border-blue-200">
+                    <h3 className="text-xl font-bold text-purple-800 mb-4 flex items-center">
+                      <Target className="w-5 h-5 mr-3 text-purple-500" />
+                      Eligibility Criteria
+                    </h3>
+                    <ul className="space-y-3 text-sm">
+                      {eligibilityCriteria.minGPA && (
+                        <li className="flex items-start text-gray-700">
+                          <GraduationCap className="w-4 h-4 mr-3 mt-1 text-indigo-500 flex-shrink-0" />
+                          <div>
+                            <strong>Minimum GPA:</strong>{" "}
+                            {eligibilityCriteria.minGPA}
+                          </div>
+                        </li>
+                      )}
+                      {eligibilityCriteria.maxIncome && (
+                        <li className="flex items-start text-gray-700">
+                          <DollarSign className="w-4 h-4 mr-3 mt-1 text-indigo-500 flex-shrink-0" />
+                          <div>
+                            <strong>Max Family Income:</strong> Rs.{" "}
+                            {eligibilityCriteria.maxIncome}
+                          </div>
+                        </li>
+                      )}
+                      {eligibilityCriteria.department?.length > 0 && (
+                        <li className="flex items-start text-gray-700">
+                          <Building2 className="w-4 h-4 mr-3 mt-1 text-indigo-500 flex-shrink-0" />
+                          <div>
+                            <strong>Departments:</strong>{" "}
+                            {eligibilityCriteria.department.join(", ")}
+                          </div>
+                        </li>
+                      )}
+                      {eligibilityCriteria.semester?.length > 0 && (
+                        <li className="flex items-start text-gray-700">
+                          <GraduationCap className="w-4 h-4 mr-3 mt-1 text-indigo-500 flex-shrink-0" />
+                          <div>
+                            <strong>Semesters:</strong>{" "}
+                            {eligibilityCriteria.semester.join(", ")}
+                          </div>
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        ) : (
-          <div className="mt-10 text-center text-red-500 text-lg font-medium">
-            This scholarship is currently closed.
-          </div>
-        )}
+        </div>
       </div>
 
       <Footer />

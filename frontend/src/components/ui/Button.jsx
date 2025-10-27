@@ -12,7 +12,7 @@ const Button = ({
   disabled = false,
 }) => {
   const baseStyles =
-    "px-6 py-2.5 font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1";
+    "px-6 py-2.5 font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 cursor-pointer";
 
   const shape = rounded ? "rounded-full" : "rounded-md";
 
