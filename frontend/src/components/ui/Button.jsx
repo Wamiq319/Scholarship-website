@@ -9,6 +9,7 @@ const Button = ({
   color = "blue", // "blue" | "gold" | "white"
   rounded = true, // true = pill, false = small rounded
   className = "",
+  disabled = false,
 }) => {
   const baseStyles =
     "px-6 py-2.5 font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1";
@@ -30,10 +31,23 @@ const Button = ({
     },
   };
 
-  const classes = clsx(baseStyles, shape, variants[variant][color], className);
+  const disabledStyles = "disabled:opacity-50 disabled:cursor-not-allowed";
+
+  const classes = clsx(
+    baseStyles,
+    shape,
+    variants[variant][color],
+    disabledStyles,
+    className
+  );
 
   return (
-    <button type={type} onClick={onClick} className={classes}>
+    <button
+      type={type}
+      onClick={onClick}
+      className={classes}
+      disabled={disabled}
+    >
       {children}
     </button>
   );

@@ -14,7 +14,7 @@ const Dropdown = ({
   const dropdownRef = useRef(null);
 
   const handleSelect = (value) => {
-    onChange(value);
+    onChange({ target: { value } });
     setIsOpen(false);
   };
 

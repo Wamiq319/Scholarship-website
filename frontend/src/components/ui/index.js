@@ -4,3 +4,4 @@ export { default as DataTable } from "./DataTable";
 export { Modal } from "./Modal";
 export { default as FormModal } from "./FormModal";
 export { default as Card } from "./Card";
+export { default as Pagination } from "./Pagination";

@@ -6,7 +6,7 @@ import {
   Process,
   WhyChooseUs,
   Testimonials,
-  LatestNews,
+  CTA,
 } from "@/sections";
 
 const LandingPage = () => {
@@ -18,7 +18,7 @@ const LandingPage = () => {
       <Process />
       <WhyChooseUs />
       <Testimonials />
-      <LatestNews />
+      <CTA />
       <Footer />
     </div>
   );
