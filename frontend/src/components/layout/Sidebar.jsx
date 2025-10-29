@@ -33,7 +33,10 @@ const Sidebar = ({ role }) => {
       >
         {/* Logo */}
         <div className="text-2xl font-bold text-blue-600 mb-6 text-center">
+          <button className="cursor-pointer" onClick={() => navigate("/")}>
+
           Scholarship Zone
+          </button>
         </div>
 
         {/* Navigation */}

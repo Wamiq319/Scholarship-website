@@ -10,12 +10,6 @@ export const register = async (req, res) => {
     !email ||
     !password ||
     !role 
-    // !department ||
-    // !rollNo ||
-    // !profile.phone ||
-    // !profile.address ||
-    // profile.gpa == null ||
-    // profile.familyIncome == null
   )
     return sendResponse(
       res,

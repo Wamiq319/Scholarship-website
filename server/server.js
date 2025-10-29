@@ -8,6 +8,7 @@ import {
   authRoutes,
   scholarshipRoutes,
   applicationRoutes,
+  evaluationRoutes,
 } from "./src/routes/index.js";
 import { deactivateExpiredScholarships } from "./src/utils/index.js";
 
@@ -72,6 +73,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/scholarships", scholarshipRoutes);
 app.use("/api/applications", applicationRoutes);
+app.use("/api/evaluations", evaluationRoutes);
 
 
 

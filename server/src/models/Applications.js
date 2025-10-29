@@ -14,15 +14,15 @@ const applicationSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["submitted", "under_review", "approved", "rejected"],
+      enum: ["submitted", "under_review", "evaluated", "approved", "rejected"],
       default: "submitted",
     },
     reviewNotes: String,
     evaluationScore: Number,
-    reviewedBy: [
+    evaluations: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User", // committee members
+        ref: "Evaluation",
       },
     ],
     documents: {
@@ -32,10 +32,10 @@ const applicationSchema = new mongoose.Schema(
       incomeCertificate: String,
       resultCard: String,
     },
-    eligibilityReason: { 
-      type: String, 
-      required: true, 
-      trim: true 
+    eligibilityReason: {
+      type: String,
+      required: true,
+      trim: true,
     },
     tracking: [
       {

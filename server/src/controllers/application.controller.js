@@ -3,6 +3,7 @@ import {
   applyForScholarship,
   deleteApplicationById,
   getAllApplications,
+  getApplicationById,
 } from "../services/index.js";
 import { sendResponse } from "../utils/index.js";
 
@@ -81,6 +82,44 @@ export const getApplications = async (req, res) => {
           data: result.data,
         },
         200
+      );
+    case "SERVER_ERROR":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        500
+      );
+    default:
+      return sendResponse(
+        res,
+        { success: false, message: "Unexpected error occurred" },
+        500
+      );
+  }
+};
+
+
+export const ApplicationGetById = async (req, res) => {
+  const { id } = req.params;
+
+  const result = await getApplicationById(id);
+
+  switch (result.status) {
+    case "SUCCESS":
+      return sendResponse(
+        res,
+        {
+          success: true,
+          message: "Application retrieved successfully",
+          data: result.data,
+        },
+        200
+      );
+    case "NOT_FOUND":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        404
       );
     case "SERVER_ERROR":
       return sendResponse(

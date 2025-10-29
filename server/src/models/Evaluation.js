@@ -14,7 +14,7 @@ const evaluationSchema = new mongoose.Schema(
     },
     scores: {
       merit: { type: Number, min: 0, max: 100 },
-      need: { type: Number, min: 0, max: 100 },
+      need: { type: Number, min: 0, max: 100 }, 
       extracurricular: { type: Number, min: 0, max: 100 },
     },
     comments: {

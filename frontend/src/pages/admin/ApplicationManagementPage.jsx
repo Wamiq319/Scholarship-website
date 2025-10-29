@@ -111,6 +111,28 @@ export const ApplicationsManagementPage = () => {
           onClick: handleView,
           title: "View",
         },
+      ];
+    }
+
+    if (status === "rejected") {
+      return [
+        {
+          icon: <FaTrash />,
+          className: "bg-red-600 hover:bg-red-700 text-white",
+          onClick: handleDelete,
+          title: "Delete",
+        },
+      ];
+    }
+
+    if (status === "evaluated") {
+      return [
+        {
+          icon: <FaEye />,
+          className: "bg-blue-500 hover:bg-blue-600 text-white",
+          onClick: handleView,
+          title: "View",
+        },
         {
           icon: <FaCheck />,
           className: "bg-green-500 hover:bg-green-600 text-white",
@@ -122,17 +144,6 @@ export const ApplicationsManagementPage = () => {
           className: "bg-red-500 hover:bg-red-600 text-white",
           onClick: handleReject,
           title: "Reject",
-        },
-      ];
-    }
-
-    if (status === "rejected") {
-      return [
-        {
-          icon: <FaTrash />,
-          className: "bg-red-600 hover:bg-red-700 text-white",
-          onClick: handleDelete,
-          title: "Delete",
         },
       ];
     }
@@ -182,24 +193,112 @@ export const ApplicationsManagementPage = () => {
         isOpen={!!selectedApp}
         onClose={() => setSelectedApp(null)}
         headerTitle="Application Details"
-        size="md"
+        size="lg"
+        showSecondaryActionButton
+        secondaryActionText="Close"
       >
-        <DataTable
-          heading="Application Info"
-          tableHeader={[
-            { label: "Field", key: "field" },
-            { label: "Value", key: "value" },
-          ]}
-          tableData={[
-            { field: "Student", value: selectedApp?.studentId?.name || "N/A" },
-            { field: "Scholarship", value: selectedApp?.scholarshipId?.title },
-            { field: "Status", value: selectedApp?.status },
-            { field: "Notes", value: selectedApp?.reviewNotes },
-            { field: "Score", value: selectedApp?.evaluationScore },
-            { field: "reviewedBy", value: selectedApp?.reviewedBy },
-          ]}
-        />
+        {selectedApp ? (
+          <div className="space-y-6 text-gray-700">
+            {/* Student Info */}
+            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+              <h4 className="text-lg font-semibold mb-3 text-blue-600">
+                Student Information
+              </h4>
+              <div className="grid grid-cols-2 gap-y-2 text-sm">
+                <p>
+                  <strong>Name:</strong> {selectedApp?.studentId?.name || "-"}
+                </p>
+                <p>
+                  <strong>Email:</strong> {selectedApp?.studentId?.email || "-"}
+                </p>
+                <p>
+                  <strong>Department:</strong>{" "}
+                  {selectedApp?.studentId?.department || "-"}
+                </p>
+              </div>
+            </div>
+
+            {/* Scholarship Info */}
+            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+              <h4 className="text-lg font-semibold mb-3 text-blue-600">
+                Scholarship Information
+              </h4>
+              <div className="grid grid-cols-2 gap-y-2 text-sm">
+                <p>
+                  <strong>Title:</strong>{" "}
+                  {selectedApp?.scholarshipId?.title || "-"}
+                </p>
+                <p>
+                  <strong>Deadline:</strong>{" "}
+                  {new Date(
+                    selectedApp?.scholarshipId?.deadline
+                  ).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+
+            {/* Evaluations */}
+            {selectedApp?.evaluations?.length > 0 && (
+              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                <h4 className="text-lg font-semibold mb-3 text-blue-600">
+                  Committee Evaluation
+                </h4>
+                {selectedApp.evaluations.map((ev, i) => (
+                  <div
+                    key={ev._id || i}
+                    className="border border-gray-100 rounded-xl p-3 mb-3 bg-gray-50"
+                  >
+                    <p className="text-sm mb-1">
+                      <strong>Merit:</strong> {ev.scores?.merit} |{" "}
+                      <strong>Need:</strong> {ev.scores?.need} |{" "}
+                      <strong>Extracurricular:</strong>{" "}
+                      {ev.scores?.extracurricular}
+                    </p>
+                    <p className="text-sm italic text-gray-600">
+                      “{ev.comments || "No comment"}”
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Evaluated on: {new Date(ev.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Status & Notes */}
+            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+              <h4 className="text-lg font-semibold mb-3 text-blue-600">
+                Status & Admin Notes
+              </h4>
+              <p>
+                <strong>Status:</strong>{" "}
+                <span
+                  className={`font-semibold ${
+                    selectedApp?.status === "approved"
+                      ? "text-green-600"
+                      : selectedApp?.status === "rejected"
+                      ? "text-red-600"
+                      : "text-blue-600"
+                  }`}
+                >
+                  {selectedApp?.status}
+                </span>
+              </p>
+              <p>
+                <strong>Eligibility Reason:</strong>{" "}
+                {selectedApp?.eligibilityReason || "-"}
+              </p>
+              <p>
+                <strong>Review Notes:</strong>{" "}
+                {selectedApp?.reviewNotes || "No notes"}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <p className="text-center text-gray-400">Loading details...</p>
+        )}
       </Modal>
+
       <ConfirmationModal
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}

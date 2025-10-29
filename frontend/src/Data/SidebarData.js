@@ -1,4 +1,4 @@
-import { Users, FileText, Settings, ClipboardList } from "lucide-react";
+import { Users, FileText, Settings, ClipboardList, FileCheck } from "lucide-react";
 
 export const SidebarMenus = {
   ADMIN: [
@@ -25,15 +25,11 @@ export const SidebarMenus = {
   ],
   COMMITTEE: [
     {
-      label: "Pending Reviews",
-      icon: ClipboardList,
+      label: "Assigned Applications",
+      Icon: ClipboardList,
       path: "/committee",
     },
-    {
-      label: "Approved Applications",
-      icon: FileText,
-      path: "/committee/approved",
-    },
-    { label: "Settings", Icon: Settings, path: "/committee/settings" },
+
+    { label: "Evaluated Applications", Icon: FileCheck, path: "/committee/evaluated" },
   ],
 };

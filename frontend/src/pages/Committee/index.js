@@ -1,4 +1,4 @@
 export { CommitteeDashboard } from "./CommitteeDashboard";
-export { PendingReviewsPage } from "./PendingReviewsPage";
-export { ApprovedApplicationsPage } from "./ApprovedApplicationsPage";
-export { SettingsPage } from "./SettingsPage";
+export { AssignedApplicationsPage } from "./AssignedApplicationsPage";
+export { ApplicationEvaluationPage } from "./ApplicationEvaluationPage";
+export { EvaluatedApplicationsPage } from "./EvaluatedApplicationsPage";

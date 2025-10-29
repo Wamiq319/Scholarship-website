@@ -131,10 +131,20 @@ const Scholarships = () => {
       type: "button",
       onClick: (scholarship) => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
-        if (!storedUser || storedUser.role.toLowerCase() !== "student") {
+
+        if (!storedUser) {
           navigate("/login");
           return;
         }
+
+        if (
+          storedUser.role.toLowerCase() === "admin" ||
+          storedUser.role.toLowerCase() === "committee"
+        ) {
+          alert("Only students can apply for scholarships.");
+          return;
+        }
+
         navigate(`/scholarships/apply/${scholarship._id}`);
       },
     },
@@ -170,7 +180,8 @@ const Scholarships = () => {
       field: "کمپیوٹر سائنس",
     },
     {
-      quote: "درخواست کا عمل بہت آسان اور سیدھا تھا۔ میں سب کو اس کی سفارش کروں گا۔",
+      quote:
+        "درخواست کا عمل بہت آسان اور سیدھا تھا۔ میں سب کو اس کی سفارش کروں گا۔",
       author: "علی رضا",
       field: "انجینئرنگ",
     },
@@ -181,12 +192,14 @@ const Scholarships = () => {
       field: "میڈیکل سائنسز",
     },
     {
-      quote: "یہاں موجود اسکالرشپس کی اقسام حیرت انگیز ہیں۔ ہر کسی کے لیے کچھ نہ کچھ ہے۔",
+      quote:
+        "یہاں موجود اسکالرشپس کی اقسام حیرت انگیز ہیں۔ ہر کسی کے لیے کچھ نہ کچھ ہے۔",
       author: "بلال حسین",
       field: "بزنس ایڈمنسٹریشن",
     },
     {
-      quote: "سپورٹ ٹیم بہت مددگار تھی۔ انہوں نے میرے تمام سوالات کے جوابات دیئے۔",
+      quote:
+        "سپورٹ ٹیم بہت مددگار تھی۔ انہوں نے میرے تمام سوالات کے جوابات دیئے۔",
       author: "زینب ملک",
       field: "آرٹس اینڈ ہیومینٹیز",
     },
@@ -390,9 +403,7 @@ const Scholarships = () => {
                       <p className="text-sm font-bold text-yellow-800">
                         - {story.author}
                       </p>
-                      <p className="text-xs text-yellow-700">
-                        {story.field}
-                      </p>
+                      <p className="text-xs text-yellow-700">{story.field}</p>
                     </div>
                   </div>
                 ))}

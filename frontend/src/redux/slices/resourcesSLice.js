@@ -174,6 +174,15 @@ export const updateApplication = (id, formData) =>
 export const deleteApplications = (id) =>
   deleteResource({ resource: "applications", id });
 
+
+//============================ evaluations shortcuts =============================
+export const createEvaluation = (formData) =>
+  createResource({ resource: "evaluations", body: formData });
+
+export const fetchEvaluationsByCommitteeMember = (id) =>
+  fetchResourceById({ resource: "evaluations", id });
+
+
 // ====================== SLICE ======================
 
 const storedAdmin = JSON.parse(localStorage.getItem("admin") || "null");

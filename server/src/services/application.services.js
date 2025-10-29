@@ -65,9 +65,28 @@ export const getAllApplications = async () => {
   try {
     const applications = await Application.find()
       .populate("studentId", "name email")
-      .populate("scholarshipId", "title");
+      .populate("scholarshipId", "title deadline")
+      .populate("evaluations");
+
 
     return { status: "SUCCESS", data: applications };
+  } catch (error) {
+    return { status: "SERVER_ERROR", message: error.message };
+  }
+};
+
+// get Application by ID
+export const getApplicationById = async (id) => {
+  try {
+    const application = await Application.findById(id)
+      .populate("studentId")
+      .populate("scholarshipId");
+
+    if (!application) {
+      return { status: "NOT_FOUND", message: "Application not found" };
+    }
+
+    return { status: "SUCCESS", data: application };
   } catch (error) {
     return { status: "SERVER_ERROR", message: error.message };
   }
@@ -101,7 +120,7 @@ export const applicationUpdate = async (id, updateData) => {
     return { status: "SERVER_ERROR", message: error.message };
   }
 };
-
+//  Delete Application by ID
 export const deleteApplicationById = async (id) => {
   try {
     const deleted = await Application.findByIdAndDelete(id);
