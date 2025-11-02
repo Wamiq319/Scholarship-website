@@ -5,21 +5,24 @@ import {
   Scholarships,
   About,
   Contact,
-  AdminPage,
   AvailableScholarshipsPage,
   MyApplications,
   StudentProfilePage,
   ScholarManagementPage,
   LoginPage,
-  StudentDashboard,
   RegisterPage,
-  CommitteeDashboard,
   ApplicationsManagementPage,
   ScholarshipApplicationPage,
   ApplicationEvaluationPage,
   UserManagementPage,
   AssignedApplicationsPage,
   EvaluatedApplicationsPage,
+  AdminDashboard,
+  AdminPanel,
+  CommitteePanel,
+  StudentPanel,
+  CommitteeDashboard,
+  StudentDashboard,
 } from "@/pages";
 
 const AppRouter = () => {
@@ -39,7 +42,7 @@ const AppRouter = () => {
         <Route path="/register" element={<RegisterPage />} />
 
         {/* Admin Parent Route */}
-        <Route path="/admin" element={<AdminPage />}>
+        <Route path="/admin" element={<AdminPanel />}>
           {/* Nested Routes (render inside <Outlet />) */}
           <Route index element={<ScholarManagementPage />} />
           <Route path="students" element={<UserManagementPage />} />
@@ -47,26 +50,26 @@ const AppRouter = () => {
             path="applicationmanagement"
             element={<ApplicationsManagementPage />}
           />
+          <Route path="dashboard" element={<AdminDashboard />} />
         </Route>
 
         {/* Student Routes */}
-        <Route path="/student" element={<StudentDashboard />}>
+        <Route path="/student" element={<StudentPanel />}>
           <Route index element={<AvailableScholarshipsPage />} />
           <Route path="applications" element={<MyApplications />} />
           <Route path="profile" element={<StudentProfilePage />} />
+          <Route path="dashboard" element={<StudentDashboard />} />
         </Route>
 
         {/* Committee Routes */}
-        <Route path="/committee" element={<CommitteeDashboard />}>
+        <Route path="/committee" element={<CommitteePanel />}>
           <Route index element={<AssignedApplicationsPage />} />
           <Route
             path="application/:id/evaluate"
             element={<ApplicationEvaluationPage />}
           />
-          <Route
-            path="evaluated"
-            element={<EvaluatedApplicationsPage />}
-          />
+          <Route path="evaluated" element={<EvaluatedApplicationsPage />} />
+          <Route path="dashboard" element={<CommitteeDashboard />} />
         </Route>
       </Routes>
     </Router>

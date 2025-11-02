@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { ArrowLeft, Menu, X } from "lucide-react";
 import { SidebarMenus } from "@/Data";
 import { Button } from "@/components";
+import Logo from "@/assets/LOGO.png";
 
 const Sidebar = ({ role }) => {
   const menus = SidebarMenus[role] || [];
@@ -12,7 +13,6 @@ const Sidebar = ({ role }) => {
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
-    
   };
 
   return (
@@ -33,10 +33,10 @@ const Sidebar = ({ role }) => {
       >
         {/* Logo */}
         <div className="text-2xl font-bold text-blue-600 mb-6 text-center">
-          <button className="cursor-pointer" onClick={() => navigate("/")}>
-
-          Scholarship Zone
-          </button>
+          <Link  className="flex justify-center items-center gap-2" to="/">
+           <ArrowLeft size={18} />
+            <img src={Logo} alt="Scholarship Zone" className="w-40 h-10" />
+          </Link>
         </div>
 
         {/* Navigation */}

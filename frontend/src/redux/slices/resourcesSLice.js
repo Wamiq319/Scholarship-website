@@ -174,6 +174,8 @@ export const updateApplication = (id, formData) =>
 export const deleteApplications = (id) =>
   deleteResource({ resource: "applications", id });
 
+export const fetchApplicationsById = (id) =>
+  fetchResourceById({ resource: "applications", id });
 
 //============================ evaluations shortcuts =============================
 export const createEvaluation = (formData) =>
@@ -181,7 +183,6 @@ export const createEvaluation = (formData) =>
 
 export const fetchEvaluationsByCommitteeMember = (id) =>
   fetchResourceById({ resource: "evaluations", id });
-
 
 // ====================== SLICE ======================
 
@@ -283,6 +284,10 @@ const resourcesSlice = createSlice({
       })
 
       // --- Fetch by ID ---
+      .addCase(fetchResourceById.pending, (state) => {
+        state.status = "loading";
+        state.error = null; // optional
+      })
       .addCase(fetchResourceById.fulfilled, (state, action) => {
         const { resource, data } = action.payload;
         state.data[`${resource}ById`] = data;
@@ -290,7 +295,7 @@ const resourcesSlice = createSlice({
       })
       .addCase(fetchResourceById.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.error = action.payload || "Something went wrong";
       })
 
       // --- Delete ---

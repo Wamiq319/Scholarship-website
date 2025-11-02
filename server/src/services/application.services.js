@@ -68,7 +68,6 @@ export const getAllApplications = async () => {
       .populate("scholarshipId", "title deadline")
       .populate("evaluations");
 
-
     return { status: "SUCCESS", data: applications };
   } catch (error) {
     return { status: "SERVER_ERROR", message: error.message };
@@ -78,7 +77,7 @@ export const getAllApplications = async () => {
 // get Application by ID
 export const getApplicationById = async (id) => {
   try {
-    const application = await Application.findById(id)
+    const application = await Application.find({ studentId:id })
       .populate("studentId")
       .populate("scholarshipId");
 

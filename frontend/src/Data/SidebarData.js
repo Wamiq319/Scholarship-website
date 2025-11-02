@@ -1,4 +1,10 @@
-import { Users, FileText, Settings, ClipboardList, FileCheck } from "lucide-react";
+import {
+  Users,
+  FileText,
+  ClipboardList,
+  FileCheck,
+  LayoutDashboard,
+} from "lucide-react";
 
 export const SidebarMenus = {
   ADMIN: [
@@ -8,6 +14,11 @@ export const SidebarMenus = {
       label: "Application Management",
       Icon: Users,
       path: "/admin/applicationmanagement",
+    },
+    {
+      label: "Admin Dashboard",
+      Icon: LayoutDashboard,
+      path: "/admin/dashboard",
     },
   ],
   STUDENT: [
@@ -22,6 +33,11 @@ export const SidebarMenus = {
       path: "/student/applications",
     },
     { label: "Profile", Icon: Users, path: "/student/profile" },
+    {
+      label: "Student Dashboard",
+      Icon: LayoutDashboard,
+      path: "/student/dashboard",
+    },
   ],
   COMMITTEE: [
     {
@@ -30,6 +46,15 @@ export const SidebarMenus = {
       path: "/committee",
     },
 
-    { label: "Evaluated Applications", Icon: FileCheck, path: "/committee/evaluated" },
+    {
+      label: "Evaluated Applications",
+      Icon: FileCheck,
+      path: "/committee/evaluated",
+    },
+    {
+      label: "Committee Dashboard",
+      Icon: LayoutDashboard,
+      path: "/committee/dashboard",
+    },
   ],
 };

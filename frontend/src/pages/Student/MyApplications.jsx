@@ -1,19 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteResource, fetchResources } from "@/redux/slices/resourcesSLice";
+
 import { ConfirmationModal, DataTable, Modal } from "@/components";
 import { FaEye, FaTrash } from "react-icons/fa";
+import {
+  deleteResource,
+  fetchApplicationsById,
+} from "@/redux/slices/resourcesSLice";
 
 export const MyApplications = () => {
   const dispatch = useDispatch();
   const { data, status, error } = useSelector((state) => state.resources);
+
   const [selectedApp, setSelectedApp] = useState(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
+  const storedUser = localStorage.getItem("user");
+  const student = storedUser ? JSON.parse(storedUser) : null;
+  const studentId = student?._id || student?.id || student;
+
   useEffect(() => {
-    dispatch(fetchResources({ resource: "applications" }));
-  }, [dispatch]);
+    if (studentId) {
+      dispatch(fetchApplicationsById(studentId));
+    }
+  }, [dispatch, studentId]);
 
   const handleView = (row) => setSelectedApp(row);
 
@@ -31,24 +42,24 @@ export const MyApplications = () => {
       setIsConfirmOpen(false);
     }
   };
+
+  const applications = data?.applicationsById || [];
+
   return (
     <div>
-      {/* Loading State  */}
-      {status === "loading" && !data.applications?.length ? (
+      {/* Loading */}
+      {status === "loading" && !applications.length ? (
         <div className="flex justify-center py-10">
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           <span className="ml-3 text-gray-600">Loading applications...</span>
         </div>
       ) : error ? (
-        //  Error State
         <p className="text-red-500 text-center mt-5">{error}</p>
-      ) : !data.applications?.length ? (
-        //  Empty State
+      ) : !applications.length ? (
         <p className="text-gray-500 text-center mt-5">
           No applications found yet.
         </p>
       ) : (
-        //  Data Table
         <DataTable
           heading="My Scholarship Applications"
           tableHeader={[
@@ -70,10 +81,11 @@ export const MyApplications = () => {
               title: "Delete",
             },
           ]}
-          tableData={data.applications}
+          tableData={applications}
         />
       )}
 
+      {/* Application Details Modal */}
       <Modal
         isOpen={!!selectedApp}
         onClose={() => setSelectedApp(null)}
@@ -82,7 +94,6 @@ export const MyApplications = () => {
       >
         {selectedApp && (
           <div className="space-y-6">
-            {/* Basic Info */}
             <DataTable
               heading="Application Info"
               tableHeader={[
@@ -92,7 +103,7 @@ export const MyApplications = () => {
               tableData={[
                 {
                   field: "Scholarship",
-                  value: selectedApp.scholarshipId?.title,
+                  value: selectedApp.scholarshipId?.title || "N/A",
                 },
                 { field: "Status", value: selectedApp.status },
                 {
@@ -120,7 +131,7 @@ export const MyApplications = () => {
                   ([key, url]) => (
                     <div
                       key={key}
-                      className="p-3 rounded-md outline-dashed outline-2 outline-yellow-300 bg-white text-[#12254D] "
+                      className="p-3 rounded-md outline-dashed outline-2 outline-yellow-300 bg-white text-[#12254D]"
                     >
                       <p className="capitalize text-sm font-medium mb-2">
                         {key}
@@ -141,22 +152,18 @@ export const MyApplications = () => {
             </div>
 
             {/* Tracking Progress */}
-            {selectedApp.tracking?.length > 0 && (
+            {!!selectedApp.tracking?.length && (
               <div className="mt-10">
                 <h3 className="text-lg font-extrabold text-blue-700 mb-6">
                   Application Tracking
                 </h3>
-
                 <div className="relative border-l-2 border-blue-200 pl-6">
                   {selectedApp.tracking.map((track, index) => (
                     <div key={index} className="mb-8 relative">
-                      {/* Dot Icon */}
                       <div className="absolute -left-3.5 top-1 w-6 h-6 bg-blue-700 text-white flex items-center justify-center rounded-full shadow-md">
                         {index + 1}
                       </div>
-
-                      {/* Card */}
-                      <div className="bg-white p-4 rounded-lg shadow-sm outline-dashed outline-2 outline-yellow-300 ">
+                      <div className="bg-white p-4 rounded-lg shadow-sm outline-dashed outline-2 outline-yellow-300">
                         <div className="flex justify-between items-center mb-1">
                           <p className="font-semibold text-gray-800 capitalize">
                             {track.stage}
@@ -172,13 +179,11 @@ export const MyApplications = () => {
                             )}
                           </span>
                         </div>
-
                         {track.remarks && (
-                          <p className="text-sm text-gray-600 italic  pl-3">
+                          <p className="text-sm text-gray-600 italic pl-3">
                             “{track.remarks}”
                           </p>
                         )}
-
                         {track.updatedBy?.name && (
                           <p className="text-xs text-gray-500 mt-2">
                             Updated by:{" "}
@@ -196,11 +201,13 @@ export const MyApplications = () => {
           </div>
         )}
       </Modal>
+
+      {/* Delete Confirmation */}
       <ConfirmationModal
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={confirmDelete}
-        message="Are you sure you want to delete this Application?"
+        message="Are you sure you want to delete this application?"
       />
     </div>
   );

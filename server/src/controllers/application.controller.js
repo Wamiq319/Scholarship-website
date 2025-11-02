@@ -98,9 +98,16 @@ export const getApplications = async (req, res) => {
   }
 };
 
-
 export const ApplicationGetById = async (req, res) => {
   const { id } = req.params;
+
+  if (!id) {
+    return sendResponse(
+      res,
+      { success: false, message: "Id is required" },
+      404
+    );
+  }
 
   const result = await getApplicationById(id);
 

@@ -1,5 +1,15 @@
 import { Application, Evaluation } from "../models/index.js";
 
+export const getAllEvaluations = async () => {
+  try {
+    const evaluations = await Evaluation.find();
+
+    return { status: "SUCCESS", data: evaluations };
+  } catch (error) {
+    return { status: "SERVER_ERROR", message: error.message };
+  }
+};
+
 export const evaluationCreation = async (
   scores,
   comments,

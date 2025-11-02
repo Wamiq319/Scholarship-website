@@ -54,7 +54,7 @@ export const ApplicationsManagementPage = () => {
   const handleAssign = (row) => {
     dispatch(
       updateApplication(row._id, {
-        status: "under-review",
+        status: "under_review",
         tracking: [
           {
             stage: "assigned-to-committee",
@@ -103,7 +103,7 @@ export const ApplicationsManagementPage = () => {
       ];
     }
 
-    if (status === "under-review") {
+    if (status === "under_review") {
       return [
         {
           icon: <FaEye />,
