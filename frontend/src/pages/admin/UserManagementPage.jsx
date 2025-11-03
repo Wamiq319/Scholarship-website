@@ -6,9 +6,9 @@ import {
   Modal,
 } from "@/components";
 import {
+  createCommitteeMember,
   deleteResource,
   fetchResources,
-  registerUser,
 } from "@/redux/slices/resourcesSLice";
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
@@ -49,11 +49,10 @@ export const UserManagementPage = () => {
       ...formData,
       role: "COMMITTEE",
     };
-    console.log(formData);
 
     if (status === "loading") return;
 
-    await dispatch(registerUser(payload));
+    await dispatch(createCommitteeMember(payload));
     setIsFormOpen(false);
   };
 

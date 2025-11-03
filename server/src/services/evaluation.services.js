@@ -1,4 +1,5 @@
 import { Application, Evaluation } from "../models/index.js";
+import { calculateEvaluationScore } from "../utils/index.js";
 
 export const getAllEvaluations = async () => {
   try {
@@ -26,12 +27,17 @@ export const evaluationCreation = async (
 
     const savedEvaluation = await newEvaluation.save();
 
-    // Update Application
+    const allEvaluations = await Evaluation.find({ applicationId });
+
+    // Calculate average score using utility
+    const avgScore = calculateEvaluationScore(allEvaluations);
+
+    // Update application
     const updatedApplication = await Application.findByIdAndUpdate(
       applicationId,
       {
         $push: {
-          evaluations: savedEvaluation._id, // add evaluation reference
+          evaluations: savedEvaluation._id,
           tracking: {
             stage: "evaluated",
             updatedBy: committeeMemberId,
@@ -39,8 +45,9 @@ export const evaluationCreation = async (
           },
         },
         status: "evaluated",
+        evaluationScore: avgScore,
       },
-      { new: true } // return updated document
+      { new: true }
     );
 
     return { status: "SUCCESS", evaluation: savedEvaluation };

@@ -8,24 +8,33 @@ import {
 
 export const SidebarMenus = {
   ADMIN: [
-    { label: "Scholarship Management", Icon: FileText, path: "/admin" },
+    {
+      label: "Admin Dashboard",
+      Icon: LayoutDashboard,
+      path: "/admin/",
+    },
+    {
+      label: "Scholarship Management",
+      Icon: FileText,
+      path: "/admin/scholarships",
+    },
     { label: "User Management", Icon: Users, path: "/admin/students" },
     {
       label: "Application Management",
       Icon: Users,
       path: "/admin/applicationmanagement",
     },
-    {
-      label: "Admin Dashboard",
-      Icon: LayoutDashboard,
-      path: "/admin/dashboard",
-    },
   ],
   STUDENT: [
     {
+      label: "Student Dashboard",
+      Icon: LayoutDashboard,
+      path: "/student",
+    },
+    {
       label: "Available Scholarships",
       Icon: FileText,
-      path: "/student",
+      path: "/student/scholarships",
     },
     {
       label: "My Applications",
@@ -33,28 +42,23 @@ export const SidebarMenus = {
       path: "/student/applications",
     },
     { label: "Profile", Icon: Users, path: "/student/profile" },
-    {
-      label: "Student Dashboard",
-      Icon: LayoutDashboard,
-      path: "/student/dashboard",
-    },
   ],
   COMMITTEE: [
     {
+      label: "Committee Dashboard",
+      Icon: LayoutDashboard,
+      path: "/committee/",
+    },
+    {
       label: "Assigned Applications",
       Icon: ClipboardList,
-      path: "/committee",
+      path: "/committee/assigned",
     },
 
     {
       label: "Evaluated Applications",
       Icon: FileCheck,
       path: "/committee/evaluated",
-    },
-    {
-      label: "Committee Dashboard",
-      Icon: LayoutDashboard,
-      path: "/committee/dashboard",
     },
   ],
 };

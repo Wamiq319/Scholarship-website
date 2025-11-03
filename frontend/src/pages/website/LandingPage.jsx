@@ -6,8 +6,21 @@ import {
   Process,
   WhyChooseUs,
   Testimonials,
-  CTA,
 } from "@/sections";
+import {CTA}from "@/components"
+
+ const ctaData = {
+    title: "Ready to Find Your Scholarship?",
+    description:
+      "Join thousands of students who have successfully funded their education through our platform. Your future is just a click away.",
+    buttonText: "Start Exploring Now",
+    buttonLink: "/scholarships",
+    gradientFrom: "purple-700",
+    gradientTo: "blue-600",
+    buttonVariant: "filled",
+    buttonColor: "gold",
+    rounded: true,
+  };
 
 const LandingPage = () => {
   return (
@@ -18,7 +31,7 @@ const LandingPage = () => {
       <Process />
       <WhyChooseUs />
       <Testimonials />
-      <CTA />
+      <CTA data={ctaData} />
       <Footer />
     </div>
   );

@@ -44,32 +44,32 @@ const AppRouter = () => {
         {/* Admin Parent Route */}
         <Route path="/admin" element={<AdminPanel />}>
           {/* Nested Routes (render inside <Outlet />) */}
-          <Route index element={<ScholarManagementPage />} />
+          <Route index element={<AdminDashboard />} />
+          <Route path="scholarships" element={<ScholarManagementPage />} />
           <Route path="students" element={<UserManagementPage />} />
           <Route
             path="applicationmanagement"
             element={<ApplicationsManagementPage />}
           />
-          <Route path="dashboard" element={<AdminDashboard />} />
         </Route>
 
         {/* Student Routes */}
         <Route path="/student" element={<StudentPanel />}>
-          <Route index element={<AvailableScholarshipsPage />} />
+          <Route index element={<StudentDashboard />} />
+          <Route path="scholarships" element={<AvailableScholarshipsPage />} />
           <Route path="applications" element={<MyApplications />} />
           <Route path="profile" element={<StudentProfilePage />} />
-          <Route path="dashboard" element={<StudentDashboard />} />
         </Route>
 
         {/* Committee Routes */}
         <Route path="/committee" element={<CommitteePanel />}>
-          <Route index element={<AssignedApplicationsPage />} />
+          <Route index element={<CommitteeDashboard />} />
+          <Route path="assigned" element={<AssignedApplicationsPage />} />
           <Route
             path="application/:id/evaluate"
             element={<ApplicationEvaluationPage />}
           />
           <Route path="evaluated" element={<EvaluatedApplicationsPage />} />
-          <Route path="dashboard" element={<CommitteeDashboard />} />
         </Route>
       </Routes>
     </Router>

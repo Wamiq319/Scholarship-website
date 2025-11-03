@@ -67,7 +67,7 @@ export const AdminDashboard = () => {
   const pendingApplications = useMemo(
     () =>
       applications.filter(
-        (a) => a?.status === "evaluated" || a?.status === "under-review"
+        (a) => a?.status === "evaluated" || a?.status === "under_review"
       ),
     [applications]
   );

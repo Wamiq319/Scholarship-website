@@ -42,10 +42,17 @@ export const CommitteeDashboard = () => {
     );
   }, [evaluations, committeeMember]);
 
+const Pending = useMemo(()=>{
+  if(!applications) return null;
+  return applications.filter(
+    (apps)=> apps.status==="under_review"
+  )
+},[applications])
+
   const evaluatedApps = myEvaluations.map((e) => e.applicationId);
   const totalAssigned = applications.length;
   const totalEvaluated = evaluatedApps.length;
-  const totalPending = totalAssigned - totalEvaluated;
+  const totalPending = Pending.length;
 
   const monthlyTrend = useMemo(() => {
     const months = [
