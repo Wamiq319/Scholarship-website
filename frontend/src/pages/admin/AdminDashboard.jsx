@@ -23,6 +23,10 @@ import {
   CheckCircle,
   XCircle,
   Clock,
+  ArrowLeft,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchResources } from "@/redux/slices/resourcesSLice";
@@ -200,36 +204,69 @@ export const AdminDashboard = () => {
         Admin Dashboard
       </h1>
 
-      {/* Stat Cards */}
-      <div className="overflow-x-auto p-2 hide-scrollbar mb-10">
-        <div className="flex gap-5 px-3 min-w-max">
-          {stats.map((item) => (
-            <div
-              key={item.title}
-              className={`flex-shrink-0 w-64 h-64 relative rounded-2xl bg-gradient-to-br ${item.color} shadow-md text-white p-6
-        flex flex-col justify-between transition-all duration-300 hover:scale-105 hover:shadow-xl`}
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between">
-                <h2 className=" uppercase tracking-wide opacity-90 font-semibold">
-                  {item.title}
-                </h2>
-                <div className="bg-white/20 p-3 rounded-xl">{item.icon}</div>
-              </div>
+{/* Stat Cards with Outer Arrows */}
 
-              {/* Value */}
-              <div className="flex flex-col justify-center items-center flex-1">
-                <p className="text-5xl font-extrabold drop-shadow-lg">
-                  {item.value?.toLocaleString()}
-                </p>
-              </div>
+<div className="relative mb-10 flex items-center">
+  {/* Left Arrow */}
+  <button
+    onClick={() =>
+      document.getElementById("stats-scroll").scrollBy({ left: -300, behavior: "smooth" })
+    }
+    className="absolute -left-8 md:-left-10 top-1/2 -translate-y-1/2 z-10
+    bg-white text-yellow-500 hover:bg-yellow-500 hover:text-white
+    rounded-full p-2 shadow-lg transition-all duration-300"
+  >
+    <ChevronLeft size={28} />
+  </button>
 
-              {/* Footer Bar */}
-              <div className="absolute bottom-0 left-0 w-full h-1 bg-white/30 rounded-full" />
-            </div>
-          ))}
+  {/* Scrollable Cards */}
+  <div
+    id="stats-scroll"
+    className="overflow-x-auto hide-scrollbar scroll-smooth w-full"
+  >
+    <div className="flex gap-5 px-6 min-w-max">
+      {stats.map((item) => (
+        <div
+          key={item.title}
+          className={`flex-shrink-0 w-64 h-64 relative rounded-2xl bg-gradient-to-br ${item.color}
+          shadow-md text-white p-6 flex flex-col justify-between
+          transition-all duration-300 hover:scale-105 hover:shadow-xl`}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <h2 className="uppercase tracking-wide opacity-90 font-semibold">
+              {item.title}
+            </h2>
+            <div className="bg-white/20 p-3 rounded-xl">{item.icon}</div>
+          </div>
+
+          {/* Value */}
+          <div className="flex flex-col justify-center items-center flex-1">
+            <p className="text-5xl font-extrabold drop-shadow-lg">
+              {item.value?.toLocaleString()}
+            </p>
+          </div>
+
+          {/* Footer */}
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-white/30 rounded-full" />
         </div>
-      </div>
+      ))}
+    </div>
+  </div>
+
+  {/* Right Arrow */}
+  <button
+    onClick={() =>
+      document.getElementById("stats-scroll").scrollBy({ left: 300, behavior: "smooth" })
+    }
+    className="absolute -right-8 md:-right-10 top-1/2 -translate-y-1/2 z-10
+    bg-white text-yellow-500 hover:bg-yellow-500 hover:text-white
+    rounded-full p-2 shadow-lg transition-all duration-300"
+  >
+    <ChevronRight size={28} />
+  </button>
+</div>
+
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

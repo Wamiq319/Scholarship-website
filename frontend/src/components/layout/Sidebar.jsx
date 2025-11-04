@@ -33,8 +33,8 @@ const Sidebar = ({ role }) => {
       >
         {/* Logo */}
         <div className="text-2xl font-bold text-blue-600 mb-6 text-center">
-          <Link  className="flex justify-center items-center gap-2" to="/">
-           <ArrowLeft size={18} />
+          <Link className="flex justify-center items-center gap-2" to="/">
+            <ArrowLeft size={18} />
             <img src={Logo} alt="Scholarship Zone" className="w-40 h-10" />
           </Link>
         </div>
@@ -45,12 +45,10 @@ const Sidebar = ({ role }) => {
             <NavLink
               key={path}
               to={path}
-              end={path === `/${role.toLowerCase()}`}
-              onClick={() => setIsOpen(false)}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                  isActive
-                    ? "bg-yellow-500 text-white  shadow-md"
+                  isActive && window.location.pathname === path
+                    ? "bg-yellow-500 text-white shadow-md"
                     : "text-gray-700 hover:bg-yellow-100"
                 }`
               }
