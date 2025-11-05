@@ -1,33 +1,27 @@
-import {
-  Button,
-  ConfirmationModal,
-  DataTable,
-  FormModal,
-  Modal,
-} from "@/components";
-import {
-  createCommitteeMember,
-  deleteResource,
-  fetchResources,
-} from "@/redux/slices/resourcesSLice";
-import React, { useEffect, useState } from "react";
+import { Button, ConfirmationModal, DataTable } from "@/components";
+import { deleteResource, fetchResources } from "@/redux/slices/resourcesSLice";
+import React, { useEffect, useMemo, useState } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
-export const UserManagementPage = () => {
+export const StudentManagementPage = () => {
   const dispatch = useDispatch();
   const [deleteId, setDeleteId] = useState(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
-  const formId = "create-committee-form";
-
-  const [isFormOpen, setIsFormOpen] = useState(false);
-
   const { data, status, error } = useSelector((state) => state.resources);
+
+  const users = data?.users;
+  console.log(users);
 
   useEffect(() => {
     dispatch(fetchResources({ resource: "users" }));
   }, [dispatch]);
+
+  // filter student
+  const students = useMemo(() => {
+    return users?.filter((u) => u.role === "STUDENT");
+  }, [users]);
 
   // DELETE user
   const handleDelete = (id) => {
@@ -43,50 +37,12 @@ export const UserManagementPage = () => {
     }
   };
 
-  // handle form submit
-  const handleSubmit = async (formData) => {
-    const payload = {
-      ...formData,
-      role: "COMMITTEE",
-    };
-
-    if (status === "loading") return;
-
-    await dispatch(createCommitteeMember(payload));
-    setIsFormOpen(false);
-  };
-
-  const committeeFields = [
-    {
-      label: "Name",
-      name: "name",
-      type: "text",
-      required: true,
-    },
-    {
-      label: "Email",
-      name: "email",
-      type: "email",
-      required: true,
-    },
-    {
-      label: "Password",
-      name: "password",
-      type: "password",
-      required: true,
-    },
-  ];
+  if (status === "loading") return;
 
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between mt-10 md:mt-0 items-center">
-        <h1 className="text-xl font-bold ">User Management</h1>
-        <Button
-          onClick={() => setIsFormOpen(true)}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-        >
-          <FaPlus />
-        </Button>
+        <h1 className="text-xl font-bold ">Student Management</h1>
       </div>
 
       {/* Loading/Error UI */}
@@ -110,7 +66,7 @@ export const UserManagementPage = () => {
             { label: "GPA", key: "profile.gpa" },
             { label: "Family Income", key: "profile.familyIncome" },
           ]}
-          tableData={data.users || []}
+          tableData={students || []}
           buttons={[
             {
               icon: <FaTrash />,
@@ -120,25 +76,6 @@ export const UserManagementPage = () => {
           ]}
         />
       )}
-
-      <Modal
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        headerTitle="Create Scholarship"
-        size="md"
-        formId={formId}
-        onSecondaryAction={() => setIsFormOpen(false)}
-        isPrimaryActionLoading={status === "loading"}
-        primaryActionText="Create"
-        showPrimaryActionButton={true}
-        showSecondaryActionButton={true}
-      >
-        <FormModal
-          formId={formId}
-          fields={committeeFields}
-          onSubmit={handleSubmit}
-        />
-      </Modal>
 
       <ConfirmationModal
         isOpen={isConfirmOpen}

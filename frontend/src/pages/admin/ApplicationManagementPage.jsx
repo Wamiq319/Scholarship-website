@@ -4,10 +4,9 @@ import {
   fetchResources,
   updateApplication,
 } from "@/redux/slices/resourcesSLice";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEye, FaCheck, FaTimes, FaTrash, FaUserPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { useReactToPrint } from "react-to-print";
 
 export const ApplicationsManagementPage = () => {
   const dispatch = useDispatch();
@@ -19,14 +18,6 @@ export const ApplicationsManagementPage = () => {
   useEffect(() => {
     dispatch(fetchResources({ resource: "applications" }));
   }, [dispatch]);
-
-  const printRef = useRef(null);
-
-  const handlePrint = useReactToPrint({
-    contentRef: printRef,
-    documentTitle: "Scholarship Application Details",
-    removeAfterPrint: true,
-  });
 
   // Actions
   const handleApprove = (row) =>
@@ -205,33 +196,60 @@ export const ApplicationsManagementPage = () => {
       >
         {selectedApp ? (
           <>
-            <div className="flex justify-end mb-3 print:hidden">
+            {/* Print Button */}
+            <div className="flex justify-end mb-5">
               <button
-                onClick={handlePrint}
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center gap-2"
+                onClick={() => {
+                  const printContent = document.getElementById("printArea");
+                  const printWindow = window.open(
+                    "",
+                    "_blank",
+                    "width=900,height=650"
+                  );
+                  printWindow.document.write(`
+              <html>
+                <head>
+                  <title>Application Details</title>
+                  <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; color: #333; }
+                    h3 { color: #1d4ed8; }
+                    .section { margin-bottom: 20px; }
+                    img { max-width: 100%; border-radius: 8px; }
+                    table, div, p { font-size: 14px; }
+                  </style>
+                </head>
+                <body>${printContent.innerHTML}</body>
+              </html>
+            `);
+                  printWindow.document.close();
+                  printWindow.focus();
+                  printWindow.print();
+                  printWindow.close();
+                }}
+                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow-md"
               >
-                🖨 Print
+                Print
               </button>
             </div>
 
             {/* --------- PRINTABLE CONTENT --------- */}
             <div
-              ref={printRef}
-              className="bg-white text-gray-800 p-8 rounded-xl border border-gray-200 space-y-6 print:p-0 print:border-none print:rounded-none"
+              id="printArea"
+              className="bg-white text-gray-800 p-8 rounded-2xl border border-gray-200 shadow-sm space-y-8"
             >
               {/* Header */}
-              <div className="text-center border-b pb-3 mb-4">
+              <div className="text-center border-b pb-4">
                 <h1 className="text-2xl font-bold text-blue-700">
                   Scholarship Application Report
                 </h1>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 mt-1">
                   Generated on {new Date().toLocaleString()}
                 </p>
               </div>
 
               {/* Student Info */}
-              <section>
-                <h2 className="text-lg font-semibold text-blue-600 mb-2 border-b pb-1">
+              <section className="space-y-3">
+                <h2 className="text-lg font-semibold text-blue-600 border-b pb-1">
                   Student Information
                 </h2>
                 <div className="grid grid-cols-2 gap-y-2 text-sm">
@@ -248,17 +266,17 @@ export const ApplicationsManagementPage = () => {
                   </p>
                 </div>
 
-                <div className="mt-3">
-                  <strong>Eligibility Reason (Student Provided):</strong>
-                  <div className="mt-1 whitespace-pre-wrap bg-gray-50 border rounded-md p-3 text-sm text-gray-700">
+                <div>
+                  <strong>Eligibility Reason:</strong>
+                  <div className="mt-2 bg-gray-50 border border-gray-100 rounded-lg p-3 text-sm text-gray-700 leading-relaxed">
                     {selectedApp?.eligibilityReason || "—"}
                   </div>
                 </div>
               </section>
 
               {/* Scholarship Info */}
-              <section>
-                <h2 className="text-lg font-semibold text-blue-600 mb-2 border-b pb-1">
+              <section className="space-y-3">
+                <h2 className="text-lg font-semibold text-blue-600 border-b pb-1">
                   Scholarship Information
                 </h2>
                 <div className="grid grid-cols-2 gap-y-2 text-sm">
@@ -283,13 +301,11 @@ export const ApplicationsManagementPage = () => {
 
               {/* Committee Evaluation */}
               {selectedApp?.evaluations?.length > 0 && (
-                <section>
-                  <h2 className="text-lg font-semibold text-blue-600 mb-2 border-b pb-1">
+                <section className="space-y-3">
+                  <h2 className="text-lg font-semibold text-blue-600 border-b pb-1">
                     Committee Evaluation
                   </h2>
-
-                  {/*Show total evaluators */}
-                  <p className="text-sm text-gray-600 mb-2">
+                  <p className="text-sm text-gray-600">
                     Evaluated by{" "}
                     <strong>{selectedApp?.evaluations?.length}</strong>{" "}
                     committee member
@@ -299,15 +315,18 @@ export const ApplicationsManagementPage = () => {
                   {selectedApp.evaluations.map((ev, i) => (
                     <div
                       key={i}
-                      className="border rounded-md p-3 mb-3 bg-gray-50 text-sm"
+                      className="border border-gray-200 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition"
                     >
-                      <p>
-                        <strong>Merit:</strong> {ev.scores?.merit || "—"} |{" "}
-                        <strong>Need:</strong> {ev.scores?.need || "—"} |{" "}
-                        <strong>Extracurricular:</strong>{" "}
-                        {ev.scores?.extracurricular || "—"}
+                      <p className="font-medium text-gray-800">
+                        Evaluated By: {ev.committeeMemberId?.name || "—"}
                       </p>
-                      <p className="italic text-gray-600 mt-1">
+                      <p className="text-sm text-gray-700 mt-1">
+                        Merit: <strong>{ev.scores?.merit || "—"}</strong> |
+                        Need: <strong>{ev.scores?.need || "—"}</strong> |
+                        Extracurricular:{" "}
+                        <strong>{ev.scores?.extracurricular || "—"}</strong>
+                      </p>
+                      <p className="italic text-gray-600 mt-2">
                         “{ev.comments || "No comments"}”
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
@@ -319,11 +338,10 @@ export const ApplicationsManagementPage = () => {
               )}
 
               {/* Status & Score */}
-              <section>
-                <h2 className="text-lg font-semibold text-blue-600 mb-2 border-b pb-1">
+              <section className="space-y-2">
+                <h2 className="text-lg font-semibold text-blue-600 border-b pb-1">
                   Status & Score
                 </h2>
-
                 <p>
                   <strong>Status:</strong>{" "}
                   <span
@@ -338,8 +356,7 @@ export const ApplicationsManagementPage = () => {
                     {selectedApp?.status?.toUpperCase() || "—"}
                   </span>
                 </p>
-
-                <p className="mt-2">
+                <p>
                   <strong>Score:</strong> {selectedApp?.evaluationScore || "—"}
                 </p>
               </section>
@@ -353,7 +370,7 @@ export const ApplicationsManagementPage = () => {
             </div>
           </>
         ) : (
-          <p className="text-center text-gray-400">Loading details...</p>
+          <p className="text-center text-gray-400 py-8">Loading details...</p>
         )}
       </Modal>
 

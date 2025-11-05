@@ -4,6 +4,7 @@ import {
   ClipboardList,
   FileCheck,
   LayoutDashboard,
+  UserMinus,
 } from "lucide-react";
 
 export const SidebarMenus = {
@@ -15,13 +16,22 @@ export const SidebarMenus = {
     },
     {
       label: "Scholarship Management",
-      Icon: FileText,
+      Icon: FileText, 
       path: "/admin/scholarships",
     },
-    { label: "User Management", Icon: Users, path: "/admin/students" },
+    {
+      label: "Student Management",
+      Icon: Users, // Students
+      path: "/admin/students",
+    },
+    {
+      label: "Committee Management",
+      Icon: UserMinus,
+      path: "/admin/committee",
+    },
     {
       label: "Application Management",
-      Icon: Users,
+      Icon: FileText, // Applications
       path: "/admin/applicationmanagement",
     },
   ],
@@ -41,7 +51,11 @@ export const SidebarMenus = {
       Icon: ClipboardList,
       path: "/student/applications",
     },
-    { label: "Profile", Icon: Users, path: "/student/profile" },
+    {
+      label: "Profile",
+      Icon: Users,
+      path: "/student/profile",
+    },
   ],
   COMMITTEE: [
     {
@@ -54,7 +68,6 @@ export const SidebarMenus = {
       Icon: ClipboardList,
       path: "/committee/assigned",
     },
-
     {
       label: "Evaluated Applications",
       Icon: FileCheck,

@@ -66,8 +66,14 @@ export const getAllApplications = async () => {
     const applications = await Application.find()
       .populate("studentId", "name email department ")
       .populate("scholarshipId", "title deadline category")
-      .populate("evaluations");
-
+      .populate("evaluations")
+      .populate({
+        path: "evaluations",
+        populate: {
+          path: "committeeMemberId",
+          select: "name email",
+        },
+      });
     const appsWithCount = applications.map((app) => ({
       ...app.toObject(),
       evaluationsCount: app.evaluations?.length || 0,
