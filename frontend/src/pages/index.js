@@ -1,5 +1,5 @@
 export * from './website';
 export * from './admin';
-export * from './Committee';
-export * from './Student';
+export * from './committee';
+export * from './student';
 export * from './auth';
