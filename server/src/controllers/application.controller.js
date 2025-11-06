@@ -7,7 +7,7 @@ import {
 } from "../services/index.js";
 import { sendResponse } from "../utils/index.js";
 
-// Student applies for a scholarship
+// Student applies for a scholarship this is just for test
 export const ScholarshipApply = async (req, res) => {
   const { scholarshipId, studentId, documents, eligibilityReason } = req.body;
 
