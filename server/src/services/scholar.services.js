@@ -8,6 +8,7 @@ export const createScholarship = async ({
   amount,
   deadline,
   category,
+  scope,
   isActive,
 }) => {
   try {
@@ -18,6 +19,7 @@ export const createScholarship = async ({
       amount,
       deadline,
       category,
+      scope,
       isActive,
     });
     const saved = await scholarship.save();
@@ -51,18 +53,11 @@ export const getScholarshipById = async (id) => {
 };
 
 // Update Scholarship
-export const updateScholarship = async (
-  id,
-  updateData
-) => {
+export const updateScholarship = async (id, updateData) => {
   try {
-    const updated = await Scholarship.findByIdAndUpdate(
-      id,
-     updateData,
-      {
-        new: true,
-      }
-    );
+    const updated = await Scholarship.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
     if (!updated) {
       return { status: "NOT_FOUND", message: "Scholarship not found" };
     }

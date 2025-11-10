@@ -1,7 +1,17 @@
-import { Button, ConfirmationModal, DataTable } from "@/components";
-import { deleteResource, fetchResources } from "@/redux/slices/resourcesSLice";
+import {
+  Button,
+  ConfirmationModal,
+  DataTable,
+  FormModal,
+  Modal,
+} from "@/components";
+import {
+  deleteResource,
+  fetchResources,
+  updateResource,
+} from "@/redux/slices/resourcesSLice";
 import React, { useEffect, useMemo, useState } from "react";
-import { FaPlus, FaTrash } from "react-icons/fa";
+import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
 export const StudentManagementPage = () => {
@@ -9,21 +19,22 @@ export const StudentManagementPage = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
-  const { data, status, error } = useSelector((state) => state.resources);
+  // Edit modal state
+  const [selectedStudent, setSelectedStudent] = useState(null);
 
+  const { data, status, error } = useSelector((state) => state.resources);
   const users = data?.users;
-  console.log(users);
 
   useEffect(() => {
     dispatch(fetchResources({ resource: "users" }));
   }, [dispatch]);
 
-  // filter student
+  // Filter only students
   const students = useMemo(() => {
     return users?.filter((u) => u.role === "STUDENT");
   }, [users]);
 
-  // DELETE user
+  // DELETE
   const handleDelete = (id) => {
     setDeleteId(id);
     setIsConfirmOpen(true);
@@ -35,6 +46,26 @@ export const StudentManagementPage = () => {
       setDeleteId(null);
       setIsConfirmOpen(false);
     }
+  };
+
+  //  Handle Update Submit
+  const handleUpdate = async (formData) => {
+    const body = {
+      department: formData.department,
+      studentId: formData.studentId,
+      profile: {
+        phone: formData.phone,
+        address: formData.address,
+        cgpa: Number(formData.cgpa),
+        familyIncome: Number(formData.familyIncome),
+      },
+    };
+
+    await dispatch(
+      updateResource({ resource: "users", id: selectedStudent._id, body })
+    );
+    setSelectedStudent(null);
+    dispatch(fetchResources({ resource: "users" })); // refresh list
   };
 
   if (status === "loading") return;
@@ -61,13 +92,18 @@ export const StudentManagementPage = () => {
             { label: "Email", key: "email" },
             { label: "Role", key: "role" },
             { label: "Department", key: "department" },
-            { label: "Roll No", key: "rollNo" },
+            { label: "StudentID", key: "studentId" },
             { label: "Phone", key: "profile.phone" },
-            { label: "GPA", key: "profile.gpa" },
+            { label: "CGPA", key: "profile.cgpa" },
             { label: "Family Income", key: "profile.familyIncome" },
           ]}
           tableData={students || []}
           buttons={[
+            {
+              icon: <FaEdit />,
+              className: "bg-yellow-500 hover:bg-yellow-600 text-white",
+              onClick: (row) => setSelectedStudent(row),
+            },
             {
               icon: <FaTrash />,
               className: "bg-red-500 hover:bg-red-600 text-white",
@@ -77,12 +113,77 @@ export const StudentManagementPage = () => {
         />
       )}
 
+      {/* Delete Confirmation */}
       <ConfirmationModal
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={confirmDelete}
         message="Are you sure you want to delete this student?"
       />
+
+      {/*  Edit Modal */}
+      <Modal
+        isOpen={!!selectedStudent}
+        onClose={() => setSelectedStudent(null)}
+        headerTitle="Edit Student Information"
+        size="md"
+        showSecondaryActionButton
+        secondaryActionText="Close"
+      >
+        {selectedStudent && (
+          <FormModal
+            initialData={{
+              department: selectedStudent.department || "",
+              studentId: selectedStudent.studentId || "",
+              phone: selectedStudent.profile?.phone || "",
+              address: selectedStudent.profile?.address || "",
+              cgpa: selectedStudent.profile?.cgpa || "",
+              familyIncome: selectedStudent.profile?.familyIncome || "",
+            }}
+            fields={[
+              {
+                name: "department",
+                label: "Department",
+                type: "text",
+                required: true,
+              },
+              {
+                name: "studentId",
+                label: "Student Id",
+                type: "text",
+                required: true,
+              },
+              {
+                name: "phone",
+                label: "Phone Number",
+                type: "text",
+                required: true,
+              },
+              {
+                name: "address",
+                label: "Address",
+                type: "text",
+                required: true,
+              },
+              { name: "cgpa", label: "CGPA", type: "number", required: true },
+              {
+                name: "familyIncome",
+                label: "Family Income",
+                type: "number",
+                required: true,
+              },
+            ]}
+            onSubmit={handleUpdate}
+            formId="update-student-form"
+          >
+            <div className="flex justify-end mt-6">
+              <Button type="submit" variant="filled" color="blue">
+                Update
+              </Button>
+            </div>
+          </FormModal>
+        )}
+      </Modal>
     </div>
   );
 };

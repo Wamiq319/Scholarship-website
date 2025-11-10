@@ -7,8 +7,10 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { Button } from "@/components";
 import heroBg1 from "../../assets/hero/hero-bg-1.jpeg";
 import heroBg2 from "../../assets/hero/hero-g-2.jpeg";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
   const slides = [
     {
       bgImage: heroBg1,
@@ -24,6 +26,7 @@ const Hero = () => {
       subtitle:
         "Discover funding opportunities tailored to your education goals and build a brighter tomorrow.",
       buttonText: "Browse Scholarships",
+      buttonLink: "/scholarships",
     },
     {
       bgImage: heroBg2,
@@ -39,6 +42,7 @@ const Hero = () => {
       subtitle:
         "Our platform simplifies scholarship management for students and universities alike.",
       buttonText: "Start Applying",
+      buttonLink: "/scholarships",
     },
   ];
 
@@ -67,7 +71,14 @@ const Hero = () => {
               <p className="text-lg md:text-xl mb-6 text-gray-200">
                 {slide.subtitle}
               </p>
-              <Button color="gold" variant="filled" rounded className="text-lg px-8 py-3">
+              <Button
+                onClick={() => navigate(slide.buttonLink)}
+                onclink
+                color="gold"
+                variant="filled"
+                rounded
+                className="text-lg px-8 py-3"
+              >
                 {slide.buttonText}
               </Button>
             </div>

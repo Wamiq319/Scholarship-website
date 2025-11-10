@@ -24,6 +24,8 @@ export const CommitteeManagementPage = () => {
 
   const { data, status, error } = useSelector((state) => state.resources);
 
+  console.log(data);
+  
   const users = useMemo(() => data?.users || [], [data?.users]);
 
   const evaluations = useMemo(() => data?.evaluations || [], [data?.evaluations]);

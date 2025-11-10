@@ -3,20 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateResource } from "@/redux/slices/resourcesSLice";
 import { Button, FormModal } from "@/components";
 
-export const StudentProfilePage = () => {
+export const AdminProfilePage = () => {
   const dispatch = useDispatch();
 
   const storedUser = JSON.parse(localStorage.getItem("user"));
-
   const { data = storedUser } = useSelector((state) => state.auth || {});
 
   const initialData = {
-    department: data?.department || "",
-    studentId: data?.studentId || "",
-    phone: data?.profile?.phone || "",
-    address: data?.profile?.address || "",
-    cgpa: data.profile?.cgpa || "",
-    familyIncome: data?.profile?.familyIncome || "",
+    name: data?.name || "",
+    email: data?.email || "",
+    password: data?.password,
   };
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,14 +21,9 @@ export const StudentProfilePage = () => {
     setIsSubmitting(true);
 
     const body = {
-      department: formData.department,
-      studentId: formData.studentId,
-      profile: {
-        phone: formData.phone,
-        address: formData.address,
-        cgpa: Number(formData.cgpa),
-        familyIncome: Number(formData.familyIncome),
-      },
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
     };
 
     const result = await dispatch(
@@ -41,7 +32,6 @@ export const StudentProfilePage = () => {
 
     if (result.payload?.success) {
       const updatedUser = result.payload.data;
-
       localStorage.setItem("user", JSON.stringify(updatedUser));
     }
 
@@ -49,30 +39,22 @@ export const StudentProfilePage = () => {
   };
 
   const fields = [
-    { name: "department", label: "Department", type: "text", required: true },
-    { name: "studentId", label: " StudentID", type: "text", required: true },
-    { name: "phone", label: "Phone Number", type: "text", required: true },
-    { name: "address", label: "Address", type: "text", required: true },
-    { name: "cgpa", label: "CGPA", type: "number", required: true },
-    {
-      name: "familyIncome",
-      label: "Family Income",
-      type: "number",
-      required: true,
-    },
+    { name: "name", label: "Full Name", type: "text", required: true },
+    { name: "email", label: "Email", type: "email", required: true },
+    { name: "password", label: "Password", type: "password", required: true },
   ];
 
   return (
     <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-        Update Your Profile
+        Update Admin Profile
       </h2>
 
       <FormModal
         initialData={initialData}
         fields={fields}
         onSubmit={handleSubmit}
-        formId="student-profile-form"
+        formId="admin-profile-form"
       >
         <div className="mt-6 flex justify-end">
           <Button

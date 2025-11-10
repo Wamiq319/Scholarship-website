@@ -5,6 +5,9 @@ import {
   FileCheck,
   LayoutDashboard,
   UserMinus,
+  Megaphone,
+  MessageCircleDashed,
+  UserStarIcon,
 } from "lucide-react";
 
 export const SidebarMenus = {
@@ -16,7 +19,7 @@ export const SidebarMenus = {
     },
     {
       label: "Scholarship Management",
-      Icon: FileText, 
+      Icon: FileText,
       path: "/admin/scholarships",
     },
     {
@@ -31,8 +34,23 @@ export const SidebarMenus = {
     },
     {
       label: "Application Management",
-      Icon: FileText, // Applications
+      Icon: FileText,
       path: "/admin/applicationmanagement",
+    },
+    {
+      label: "Announcement Management",
+      Icon: Megaphone,
+      path: "/admin/announcement",
+    },
+    {
+      label: "Contact Messages",
+      Icon: MessageCircleDashed,
+      path: "/admin/messages",
+    },
+    {
+      label: "Profile",
+      Icon: UserStarIcon,
+      path: "/admin/profile",
     },
   ],
   STUDENT: [
@@ -55,6 +73,11 @@ export const SidebarMenus = {
       label: "Profile",
       Icon: Users,
       path: "/student/profile",
+    },
+    {
+      label: "Announcements",
+      Icon: Megaphone,
+      path: "/student/announcements",
     },
   ],
   COMMITTEE: [

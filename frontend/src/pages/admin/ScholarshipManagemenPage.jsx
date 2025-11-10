@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaTrash, FaPlus } from "react-icons/fa";
+import { FaTrash, FaPlus, FaEdit } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
@@ -12,6 +12,7 @@ import {
   fetchResources,
   deleteResource,
   createScholarship,
+  updateResource,
 } from "@/redux/slices/resourcesSLice";
 
 const scholarshipFields = [
@@ -42,9 +43,20 @@ const scholarshipFields = [
       { label: "Need-based", value: "Need-based" },
       { label: "Merit-based", value: "Merit-based" },
       { label: "Special", value: "Special" },
+      { label: "PEEF", value: "PEEF" },
       { label: "Other", value: "Other" },
     ],
     defaultValue: "Other",
+    required: true,
+  },
+  {
+    label: "Scope",
+    name: "scope",
+    type: "dropdown",
+    options: [
+      { label: "National", value: "National" },
+      { label: "International", value: "International" },
+    ],
     required: true,
   },
   {
@@ -89,12 +101,12 @@ const scholarshipFields = [
 
 export const ScholarManagementPage = () => {
   const dispatch = useDispatch();
-
   const { data, status, error } = useSelector((state) => state.resources);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [editData, setEditData] = useState(null);
   const formId = "scholarship-form";
 
   useEffect(() => {
@@ -104,10 +116,11 @@ export const ScholarManagementPage = () => {
   useEffect(() => {
     if (status === "succeeded" && isFormOpen) {
       setIsFormOpen(false);
+      setEditData(null);
     }
   }, [status]);
 
-  //  DELETE Scholarship
+  //  Delete Scholarship
   const handleDelete = (id) => {
     setDeleteId(id);
     setIsConfirmOpen(true);
@@ -123,9 +136,14 @@ export const ScholarManagementPage = () => {
     }
   };
 
-  // handle form submit
+  // Edit Scholarship
+  const handleEdit = (scholarship) => {
+    setEditData(scholarship);
+    setIsFormOpen(true);
+  };
+
+  //  Create or Update Scholarship
   const handleCreateScholarship = (formData) => {
-    // convert comma-separated strings into arrays
     const departments =
       formData["eligibilityCriteria.department"]
         ?.split(",")
@@ -141,6 +159,7 @@ export const ScholarManagementPage = () => {
       amount: Number(formData.amount),
       deadline: formData.deadline,
       category: formData.category,
+      scope: formData.scope,
       description: formData.description,
       eligibilityCriteria: {
         minGPA: Number(formData["eligibilityCriteria.minGPA"]),
@@ -150,7 +169,21 @@ export const ScholarManagementPage = () => {
       },
     };
 
-    dispatch(createScholarship(payload));
+    if (editData) {
+      dispatch(
+        updateResource({
+          resource: "scholarships",
+          id: editData._id,
+          body: payload,
+        })
+      ).then(() => {
+        dispatch(fetchResources({ resource: "scholarships" }));
+      });
+    } else {
+      dispatch(createScholarship(payload)).then(() => {
+        dispatch(fetchResources({ resource: "scholarships" }));
+      });
+    }
   };
 
   return (
@@ -158,10 +191,13 @@ export const ScholarManagementPage = () => {
       <div className="flex justify-between mt-10 md:mt-0 items-center">
         <h1 className="text-xl font-bold ">Scholarship Management</h1>
         <Button
-          onClick={() => setIsFormOpen(true)}
+          onClick={() => {
+            setIsFormOpen(true);
+            setEditData(null);
+          }}
           className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
         >
-          <FaPlus />
+          <FaPlus /> Add
         </Button>
       </div>
 
@@ -186,6 +222,11 @@ export const ScholarManagementPage = () => {
           tableData={data.scholarships || []}
           buttons={[
             {
+              icon: <FaEdit />,
+              className: "bg-yellow-500 hover:bg-yellow-600 text-white",
+              onClick: (row) => handleEdit(row),
+            },
+            {
               icon: <FaTrash />,
               className: "bg-red-500 hover:bg-red-600 text-white",
               onClick: (row) => handleDelete(row._id),
@@ -197,23 +238,42 @@ export const ScholarManagementPage = () => {
       {/* Scholarship Form Modal */}
       <Modal
         isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        headerTitle="Create Scholarship"
+        onClose={() => {
+          setIsFormOpen(false);
+          setEditData(null);
+        }}
+        headerTitle={editData ? "Edit Scholarship" : "Create Scholarship"}
         size="lg"
         formId={formId}
         onSecondaryAction={() => setIsFormOpen(false)}
         isPrimaryActionLoading={status === "loading"}
-        primaryActionText="Create"
-        showPrimaryActionButton={true}
-        showSecondaryActionButton={true}
+        primaryActionText={editData ? "Update" : "Create"}
+        showPrimaryActionButton
+        showSecondaryActionButton
       >
         <FormModal
           formId={formId}
           fields={scholarshipFields}
           onSubmit={handleCreateScholarship}
+          initialData={
+            editData
+              ? {
+                  ...editData,
+                  "eligibilityCriteria.minGPA":
+                    editData.eligibilityCriteria?.minGPA,
+                  "eligibilityCriteria.maxIncome":
+                    editData.eligibilityCriteria?.maxIncome,
+                  "eligibilityCriteria.department":
+                    editData.eligibilityCriteria?.department?.join(", "),
+                  "eligibilityCriteria.semester":
+                    editData.eligibilityCriteria?.semester?.join(", "),
+                }
+              : {}
+          }
         />
       </Modal>
 
+      {/* Delete Confirmation */}
       <ConfirmationModal
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}

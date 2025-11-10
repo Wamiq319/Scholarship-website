@@ -1,16 +1,42 @@
-import React from "react";
-import { Navbar, Footer } from "../../components";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Clock,
-  Facebook,
-  Twitter,
-  Linkedin,
-} from "lucide-react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Navbar, Footer, InputField, Button } from "../../components";
+import { Mail, Phone, Facebook, Twitter, Linkedin } from "lucide-react";
+import { createResource } from "@/redux/slices/resourcesSLice";
 
 const Contact = () => {
+  const dispatch = useDispatch();
+
+  // form state
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!fullName || !email || !message) {
+      setError("Please fill all required fields.");
+      return;
+    }
+
+    setError("");
+
+    dispatch(
+      createResource({
+        resource: "contact",
+        body: { fullName, email, subject, message },
+      })
+    );
+
+    setFullName("");
+    setEmail("");
+    setSubject("");
+    setMessage("");
+  };
+
   return (
     <div className="bg-gray-50 flex flex-col min-h-screen">
       <Navbar />
@@ -39,60 +65,56 @@ const Contact = () => {
           <h2 className="text-3xl font-semibold text-blue-700 mb-6 text-center">
             Send Us a Message
           </h2>
-          <form className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-gray-700 mb-2">
-                Full Name
-              </label>
-              <input
-                id="name"
-                type="text"
-                required
-                placeholder="Enter your full name"
-                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="block text-gray-700 mb-2">
-                Email Address
-              </label>
-              <input
-                id="email"
-                type="email"
-                required
-                placeholder="yourname@email.com"
-                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="subject" className="block text-gray-700 mb-2">
-                Subject
-              </label>
-              <input
-                id="subject"
-                type="text"
-                placeholder="What’s this about?"
-                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="message" className="block text-gray-700 mb-2">
-                Message
-              </label>
-              <textarea
-                id="message"
-                rows="5"
-                required
-                placeholder="Write your message here..."
-                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-              ></textarea>
-            </div>
-            <button
+
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <InputField
+              label="Full Name "
+              name="fullName"
+              type="text"
+              placeholder="Enter your full name"
+              required
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
+            <InputField
+              label="Email Address"
+              name="email"
+              type="email"
+              placeholder="yourname@email.com"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <InputField
+              label="Subject"
+              name="subject"
+              type="text"
+              placeholder="What's this about?"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+            />
+            <InputField
+              label="Message"
+              name="message"
+              type="textarea"
+              placeholder="Write your message here..."
+              required
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              rows={5}
+            />
+
+            {error && <p className="text-red-500">{error}</p>}
+
+            <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-semibold py-3 rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-all"
+              color="blue"
+              variant="filled"
+              rounded
+              className="w-full py-3 text-lg"
             >
               Send Message
-            </button>
+            </Button>
           </form>
         </div>
 
@@ -121,7 +143,6 @@ const Contact = () => {
                 title: "Helpline",
                 detail: "+92 300 1234567",
               },
-             
             ].map((item, i) => (
               <div
                 key={i}

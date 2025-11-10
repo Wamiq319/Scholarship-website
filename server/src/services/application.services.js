@@ -2,19 +2,27 @@ import { Application } from "../models/index.js";
 import cloudinary from "../utils/cloudinary.config.js";
 
 // Student applies for a scholarship
-export const applyForScholarship = async (
-  scholarshipId,
-  studentId,
-  documents,
-  eligibilityReason
-) => {
+export const applyForScholarship = async (body) => {
   try {
+    const {
+      scholarshipId,
+      studentId,
+      scholarshipType,
+      personalInfo,
+      academicInfo,
+      familyInfo,
+      financialInfo,
+      statementOfPurpose,
+      documents,
+      specific,
+      eligibilityReason,
+    } = body;
+
     // Prevent duplicate application
     const alreadyApplied = await Application.findOne({
       scholarshipId,
       studentId,
     });
-
     if (alreadyApplied) {
       return {
         status: "CONFLICT",
@@ -22,29 +30,37 @@ export const applyForScholarship = async (
       };
     }
 
-    // --- Upload all documents to Cloudinary ---
+    // Upload documents to Cloudinary
     const uploadedDocs = {};
-    for (const key in documents) {
-      const file = documents[key];
-      if (!file) continue;
-
-      try {
-        const uploadResponse = await cloudinary.uploader.upload(file);
-        uploadedDocs[key] = uploadResponse.secure_url;
-      } catch (err) {
-        return {
-          status: "UPLOAD_ERROR",
-          message: `Failed to upload ${key}: ${err.message}`,
-        };
+    if (documents) {
+      for (const key in documents) {
+        const file = documents[key];
+        if (!file) continue;
+        try {
+          const uploadRes = await cloudinary.uploader.upload(file);
+          uploadedDocs[key] = uploadRes.secure_url;
+        } catch (err) {
+          return {
+            status: "UPLOAD_ERROR",
+            message: `Failed to upload ${key}: ${err.message}`,
+          };
+        }
       }
     }
 
-    // --- Create new application with uploaded document URLs ---
+    // Create application
     const newApplication = await Application.create({
       scholarshipId,
       studentId,
-      eligibilityReason,
+      scholarshipType,
+      personalInfo,
+      academicInfo,
+      familyInfo,
+      financialInfo,
+      statementOfPurpose,
       documents: uploadedDocs,
+      specific,
+      eligibilityReason,
       tracking: [
         {
           stage: "submitted",
@@ -91,13 +107,21 @@ export const getApplicationById = async (id) => {
     // if id === student id
     let applications = await Application.find({ studentId: id })
       .populate("studentId")
-      .populate("scholarshipId");
+      .populate("scholarshipId")
+      
 
     // if id === aplication id
     if (!applications.length) {
       applications = await Application.findById(id)
         .populate("studentId")
-        .populate("scholarshipId");
+        .populate("scholarshipId")
+        .populate({
+          path: "evaluations",
+          populate: {
+            path: "committeeMemberId",
+            select: "name email",
+          },
+        });
     }
 
     if (!applications) {

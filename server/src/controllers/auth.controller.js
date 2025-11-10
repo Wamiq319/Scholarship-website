@@ -3,14 +3,9 @@ import { sendResponse } from "../utils/index.js";
 
 // REGISTER CONTROLLER
 export const register = async (req, res) => {
-  const { name, email, password, role, department, rollNo, profile } = req.body;
+  const { name, email, password, role, department, studentId, profile } = req.body;
 
-  if (
-    !name ||
-    !email ||
-    !password ||
-    !role 
-  )
+  if (!name || !email || !password || !role)
     return sendResponse(
       res,
       { success: false, message: "All fields are required" },
@@ -21,9 +16,8 @@ export const register = async (req, res) => {
     name,
     email,
     password,
-    role,
     department,
-    rollNo,
+    studentId,
     profile,
   });
 

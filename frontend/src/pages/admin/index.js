@@ -4,3 +4,6 @@ export { ScholarManagementPage } from "./ScholarshipManagemenPage";
 export { ApplicationsManagementPage } from "./ApplicationManagementPage";
 export { AdminDashboard } from "./AdminDashboard";
 export { StudentManagementPage } from "./StudentManagementPage";
+export { AnnouncementManagmentPage } from "./AnnouncementManagmentPage";
+export { ContactMessagePage } from "./ContactMessagePage";
+export { AdminProfilePage } from "./AdminProfilePage";

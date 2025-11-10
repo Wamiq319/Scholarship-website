@@ -35,10 +35,13 @@ const Scholarships = () => {
     minGPA: "",
     maxGPA: "",
     maxIncome: "",
+    search: "",
+    scope: "",
   };
 
   const [filters, setFilters] = useState(initialFilters);
   const [appliedFilters, setAppliedFilters] = useState(initialFilters);
+
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const scholarshipsPerPage = 4;
@@ -55,6 +58,9 @@ const Scholarships = () => {
   const handleDropdownChange = (e) => {
     setFilters((prev) => ({ ...prev, category: e.target.value }));
   };
+  const handleScopeDropdownChange = (e) => {
+    setFilters((prev) => ({ ...prev, scope: e.target.value }));
+  };
 
   const handleApplyFilters = () => {
     setLoading(true);
@@ -62,7 +68,7 @@ const Scholarships = () => {
     setTimeout(() => {
       setAppliedFilters(filters);
       setLoading(false);
-    }, 3000);
+    }, 1000);
   };
 
   const handleClearFilters = () => {
@@ -75,38 +81,37 @@ const Scholarships = () => {
     { value: "", label: "All" },
     { value: "Need-based", label: "Need-based" },
     { value: "Merit-based", label: "Merit-based" },
-    { value: "Special", label: "Special" },
+    { value: "PEEF", label: "PEEF" },
     { value: "Other", label: "Other" },
   ];
 
   const filteredScholarships = data?.scholarships?.filter((scholarship) => {
-    const { category, minGPA, maxGPA, maxIncome } = appliedFilters;
+    const { category, minGPA, maxGPA, maxIncome, search, scope } =
+      appliedFilters;
     let isMatch = true;
 
-    if (category && scholarship.category !== category) {
+    if (category && scholarship.category !== category) isMatch = false;
+    if (minGPA && scholarship.eligibilityCriteria?.minGPA < parseFloat(minGPA))
       isMatch = false;
-    }
-    if (
-      minGPA &&
-      (typeof scholarship.eligibilityCriteria?.minGPA !== "number" ||
-        scholarship.eligibilityCriteria.minGPA < parseFloat(minGPA))
-    ) {
+    if (maxGPA && scholarship.eligibilityCriteria?.minGPA > parseFloat(maxGPA))
       isMatch = false;
-    }
-    if (
-      maxGPA &&
-      (typeof scholarship.eligibilityCriteria?.minGPA !== "number" ||
-        scholarship.eligibilityCriteria.minGPA > parseFloat(maxGPA))
-    ) {
-      isMatch = false;
-    }
     if (
       maxIncome &&
-      (typeof scholarship.eligibilityCriteria?.maxIncome !== "number" ||
-        scholarship.eligibilityCriteria.maxIncome > parseFloat(maxIncome))
-    ) {
+      scholarship.eligibilityCriteria?.maxIncome > parseFloat(maxIncome)
+    )
       isMatch = false;
-    }
+    if (
+      search &&
+      !scholarship.title?.toLowerCase().includes(search.toLowerCase())
+    )
+      isMatch = false;
+
+    if (
+      scope &&
+      String(scholarship.scope || "").toLowerCase() !==
+        String(scope).toLowerCase()
+    )
+      isMatch = false;
 
     return isMatch;
   });
@@ -127,25 +132,10 @@ const Scholarships = () => {
       format: "daysLeft",
     },
     {
-      label: "Apply Now",
+      label: "Explore",
       type: "button",
       onClick: (scholarship) => {
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-
-        if (!storedUser) {
-          navigate("/login");
-          return;
-        }
-
-        if (
-          storedUser.role.toLowerCase() === "admin" ||
-          storedUser.role.toLowerCase() === "committee"
-        ) {
-          alert("Only students can apply for scholarships.");
-          return;
-        }
-
-        navigate(`/scholarships/apply/${scholarship._id}`);
+        navigate(`/scholarship/details/${scholarship._id}`);
       },
     },
   ];
@@ -206,6 +196,8 @@ const Scholarships = () => {
   ];
 
   const [currentStory, setCurrentStory] = useState(0);
+  // Check if any filter has a value
+  const hasActiveFilters = Object.values(filters).some((value) => value !== "");
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -238,76 +230,114 @@ const Scholarships = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main Content */}
           <main className="w-full lg:w-3/4">
-            <div className="my-8 p-6 bg-white rounded-xl shadow-lg border border-gray-200">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Search + Filters Section */}
+            <section className="mb-8 p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-md border border-gray-100 space-y-6">
+              {/* Search Bar */}
+              <div className="flex flex-col md:flex-row items-center gap-4">
+                <div className="relative w-full md:flex-1">
+                  <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search scholarships by name..."
+                    className="w-full border border-gray-200 rounded-xl px-10 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200"
+                    value={filters.search || ""}
+                    onChange={(e) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        search: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+
+                <Button
+                  onClick={handleApplyFilters}
+                  color="blue"
+                  className="flex items-center justify-center gap-2 w-full md:w-auto px-6 py-2.5 rounded-xl shadow-sm hover:shadow-md transition"
+                >
+                  <FaSearch /> Search
+                </Button>
+              </div>
+
+              {/* Filters Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
                 <DropDown
                   label="Category"
                   options={categoryOptions}
                   selectedValue={filters.category}
                   onChange={handleDropdownChange}
-                  required={false}
                 />
+                <DropDown
+                  label="Scope"
+                  options={[
+                    { value: "", label: "All" },
+                    { value: "national", label: "National" },
+                    { value: "international", label: "International" },
+                  ]}
+                  selectedValue={filters.scope}
+                  onChange={handleScopeDropdownChange}
+                />
+
                 <InputField
                   label="Min GPA"
                   name="minGPA"
                   type="number"
-                  placeholder="e.g., 3.0"
+                  placeholder="e.g. 3.0"
                   value={filters.minGPA}
                   onChange={handleFilterChange}
-                  required={false}
                 />
                 <InputField
                   label="Max GPA"
                   name="maxGPA"
                   type="number"
-                  placeholder="e.g., 4.0"
+                  placeholder="e.g. 4.0"
                   value={filters.maxGPA}
                   onChange={handleFilterChange}
-                  required={false}
                 />
                 <InputField
                   label="Max Income"
                   name="maxIncome"
                   type="number"
-                  placeholder="e.g., 50000"
+                  placeholder="e.g. 50000"
                   value={filters.maxIncome}
                   onChange={handleFilterChange}
-                  required={false}
                 />
               </div>
-              <div className="mt-6 flex justify-end gap-4">
-                <Button
-                  onClick={handleClearFilters}
-                  variant="outline"
-                  color="blue"
-                  className="flex items-center gap-2"
-                >
-                  <FaTimes /> Clear Filters
-                </Button>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end flex-wrap gap-3 pt-2">
+                {hasActiveFilters && (
+                  <Button
+                    onClick={handleClearFilters}
+                    variant="outline"
+                    color="blue"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl hover:bg-blue-50 transition"
+                  >
+                    <FaTimes /> Clear
+                  </Button>
+                )}
+
                 <Button
                   onClick={handleApplyFilters}
                   color="blue"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl shadow-sm hover:shadow-md transition"
                 >
                   <FaSearch /> Apply Filters
                 </Button>
               </div>
-            </div>
+            </section>
 
-            <div className="grid 2xl:grid-cols-2 gap-6 justify-center mt-10">
+            {/* Scholarships List */}
+            <div className="grid xl:grid-cols-2 gap-6 mt-10">
               {status === "loading" && !data.scholarships?.length ? (
-                <div className="flex justify-center py-10">
-                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                  <span className="ml-3 text-gray-600">
-                    Loading scholarships...
-                  </span>
+                <div className="flex justify-center items-center py-10 text-gray-600">
+                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mr-3"></div>
+                  Loading scholarships...
                 </div>
               ) : loading ? (
-                <div className="col-span-full flex justify-center py-10">
-                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                  <span className="ml-3 text-gray-600">
-                    Applying filters...
-                  </span>
+                <div className="flex justify-center items-center py-10 text-gray-600">
+                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mr-3"></div>
+                  Applying filters...
                 </div>
               ) : currentScholarships?.length > 0 ? (
                 currentScholarships.map((scholarship) => (
@@ -319,16 +349,17 @@ const Scholarships = () => {
                   />
                 ))
               ) : (
-                <div className="col-span-full text-center py-10 bg-white rounded-lg shadow-md">
-                  <p className="text-gray-600 text-lg">
-                    No scholarships found.
+                <div className="col-span-full text-center py-10 bg-white rounded-2xl shadow-sm border border-gray-100">
+                  <p className="text-gray-700 font-medium text-lg">
+                    No scholarships found
                   </p>
-                  <p className="text-sm text-gray-500 mt-2">
+                  <p className="text-gray-500 text-sm mt-2">
                     Try adjusting your filters or check back later.
                   </p>
                 </div>
               )}
             </div>
+
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}

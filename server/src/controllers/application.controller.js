@@ -9,26 +9,17 @@ import { sendResponse } from "../utils/index.js";
 
 // Student applies for a scholarship this is just for test
 export const ScholarshipApply = async (req, res) => {
-  const { scholarshipId, studentId, documents, eligibilityReason } = req.body;
+  const { scholarshipId, studentId, scholarshipType } = req.body;
 
-  if (
-    scholarshipId === undefined ||
-    studentId === undefined ||
-    eligibilityReason === undefined
-  ) {
+  if (!scholarshipId || !studentId || !scholarshipType) {
     return sendResponse(
       res,
-      { success: false, message: "scholarshipId and studentId are required" },
+      { success: false, message: "scholarshipId, studentId & scholarshipType are required" },
       400
     );
   }
 
-  const result = await applyForScholarship(
-    scholarshipId,
-    studentId,
-    documents,
-    eligibilityReason
-  );
+  const result = await applyForScholarship(req.body);
 
   switch (result.status) {
     case "SUCCESS":

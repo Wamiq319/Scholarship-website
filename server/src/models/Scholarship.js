@@ -31,6 +31,11 @@ const scholarshipSchema = new mongoose.Schema(
       enum: ["Need-based", "Merit-based", "Special", "Other"],
       default: "Other",
     },
+    scope: {
+      type: String,
+      enum: ["National", "International"],
+      required: true,
+    },
     isActive: {
       type: Boolean,
       default: true,

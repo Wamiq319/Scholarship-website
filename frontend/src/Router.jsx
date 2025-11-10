@@ -24,6 +24,11 @@ import {
   StudentDashboard,
   StudentManagementPage,
   CommitteeManagementPage,
+  ScholarshipDetailPage,
+  AnnouncementManagmentPage,
+  AnnouncementsPage,
+  ContactMessagePage,
+  AdminProfilePage,
 } from "@/pages";
 
 const AppRouter = () => {
@@ -35,6 +40,10 @@ const AppRouter = () => {
         <Route
           path="/scholarships/apply/:id"
           element={<ScholarshipApplicationPage />}
+        />
+        <Route
+          path="/scholarship/details/:id"
+          element={<ScholarshipDetailPage />}
         />
 
         <Route path="/about" element={<About />} />
@@ -53,6 +62,9 @@ const AppRouter = () => {
             element={<ApplicationsManagementPage />}
           />
           <Route path="students" element={<StudentManagementPage />} />
+          <Route path="announcement" element={<AnnouncementManagmentPage />} />
+          <Route path="messages" element={<ContactMessagePage />} />
+          <Route path="profile" element={<AdminProfilePage />} />
         </Route>
 
         {/* Student Routes */}
@@ -61,6 +73,7 @@ const AppRouter = () => {
           <Route path="scholarships" element={<AvailableScholarshipsPage />} />
           <Route path="applications" element={<MyApplications />} />
           <Route path="profile" element={<StudentProfilePage />} />
+          <Route path="announcements" element={<AnnouncementsPage />} />
         </Route>
 
         {/* Committee Routes */}

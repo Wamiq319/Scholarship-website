@@ -15,11 +15,11 @@ const RegisterPage = () => {
     confirmPassword: "",
     role: "STUDENT",
     department: "",
-    rollNo: "",
+    studentId: "",
     profile: {
       phone: "",
       address: "",
-      gpa: "",
+      cgpa: "",
       familyIncome: "",
     },
   });
@@ -138,8 +138,8 @@ const RegisterPage = () => {
               />
 
               <InputField
-                label="Roll Number"
-                name="rollNo"
+                label="StudentId"
+                name="studentId"
                 type="text"
                 value={formData.rollNo}
                 onChange={handleChange}
@@ -165,8 +165,8 @@ const RegisterPage = () => {
               />
 
               <InputField
-                label="GPA"
-                name="profile.gpa"
+                label="CGPA"
+                name="profile.cgpa"
                 type="number"
                 value={formData.profile.gpa}
                 onChange={handleChange}

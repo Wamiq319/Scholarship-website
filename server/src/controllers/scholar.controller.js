@@ -17,6 +17,7 @@ export const create = async (req, res) => {
     amount,
     deadline,
     category,
+    scope,
     isActive,
   } = req.body;
 
@@ -24,6 +25,7 @@ export const create = async (req, res) => {
   if (
     !title ||
     !description ||
+    !scope ||
     !eligibilityCriteria.minGPA ||
     !eligibilityCriteria.maxIncome ||
     !eligibilityCriteria.department ||
@@ -46,6 +48,7 @@ export const create = async (req, res) => {
     amount,
     deadline,
     category,
+    scope,
     isActive,
   });
 

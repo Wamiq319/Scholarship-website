@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       lowercase: true,
-
       trim: true,
     },
     password: { type: String, required: true, minlength: 6 },
@@ -19,11 +18,11 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     department: String,
-    rollNo: String,
+    studentId: String,
     profile: {
       phone: String,
       address: String,
-      gpa: Number,
+      cgpa: Number,
       familyIncome: Number,
     },
     isActive: { type: Boolean, default: true },
