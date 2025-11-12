@@ -1,5 +1,4 @@
 import express from "express";
-import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import cron from "node-cron";
@@ -13,6 +12,7 @@ import {
   contactRoutes,
 } from "./src/routes/index.js";
 import { deactivateExpiredScholarships } from "./src/utils/index.js";
+import connectDB from "./src/utils/db.js";
 
 dotenv.config();
 const app = express();
@@ -59,12 +59,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// MongoDB Connection
-mongoose
-  .connect(process.env.MONGO_URI, { dbName: "scholarship_zone" })
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("MongoDB Connection Error:", err));
-
 cron.schedule("* * * * *", deactivateExpiredScholarships);
 
 // Routes
@@ -81,4 +75,17 @@ app.use("/api/contact", contactRoutes);
 
 // Server Start
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(` Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error(" Failed to connect DB, Server not started");
+    process.exit(1);
+  }
+};
+
+startServer();
