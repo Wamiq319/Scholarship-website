@@ -46,6 +46,7 @@ export const SidebarMenus = {
       label: "Contact Messages",
       Icon: MessageCircleDashed,
       path: "/admin/messages",
+      countKey: "contact",
     },
     {
       label: "Profile",
@@ -78,6 +79,7 @@ export const SidebarMenus = {
       label: "Announcements",
       Icon: Megaphone,
       path: "/student/announcements",
+      countKey: "announcement",
     },
   ],
   COMMITTEE: [
@@ -90,6 +92,7 @@ export const SidebarMenus = {
       label: "Assigned Applications",
       Icon: ClipboardList,
       path: "/committee/assigned",
+      countKey: "application",
     },
     {
       label: "Evaluated Applications",

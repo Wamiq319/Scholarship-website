@@ -33,7 +33,9 @@ export const createContactMessage = async (req, res) => {
 
 // Get all contact messages (Admin)
 export const fetchAllContacts = async (req, res) => {
-  const result = await getContacts();
+  const userId = req.user._id;
+
+  const result = await getContacts(userId);
 
   switch (result.status) {
     case "SUCCESS":

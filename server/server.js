@@ -10,13 +10,16 @@ import {
   evaluationRoutes,
   announcementRoutes,
   contactRoutes,
+  unreadRoutes,
 } from "./src/routes/index.js";
 import { deactivateExpiredScholarships } from "./src/utils/index.js";
 import connectDB from "./src/utils/db.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
 
+app.use(cookieParser());
 // CORS Configuration
 const corsOptions = {
   origin: (origin, callback) => {
@@ -72,6 +75,7 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/evaluations", evaluationRoutes);
 app.use("/api/announcement", announcementRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/unreadCount", unreadRoutes);
 
 // Server Start
 const PORT = process.env.PORT || 3000;

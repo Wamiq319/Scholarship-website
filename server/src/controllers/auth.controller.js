@@ -1,9 +1,10 @@
 import { registerUser, loginUser } from "../services/index.js";
-import { sendResponse } from "../utils/index.js";
+import { generateToken, sendResponse } from "../utils/index.js";
 
 // REGISTER CONTROLLER
 export const register = async (req, res) => {
-  const { name, email, password, role, department, studentId, profile } = req.body;
+  const { name, email, password, role, department, studentId, profile } =
+    req.body;
 
   if (!name || !email || !password || !role)
     return sendResponse(
@@ -16,6 +17,7 @@ export const register = async (req, res) => {
     name,
     email,
     password,
+    role,
     department,
     studentId,
     profile,
@@ -23,6 +25,7 @@ export const register = async (req, res) => {
 
   switch (result.status) {
     case "SUCCESS":
+      generateToken(result.data._id, res);
       return sendResponse(
         res,
         {
@@ -68,6 +71,7 @@ export const login = async (req, res) => {
 
   switch (result.status) {
     case "SUCCESS":
+      generateToken(result.data._id, res);
       return sendResponse(
         res,
         {

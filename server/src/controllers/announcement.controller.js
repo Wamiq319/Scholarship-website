@@ -1,4 +1,5 @@
 import {
+  announcdmentUpdate,
   createAnnouncements,
   deleteAnnouncement,
   getAllAnnouncements,
@@ -50,11 +51,20 @@ export const createAnnouncement = async (req, res) => {
 
 // Get All
 export const getAnnouncements = async (req, res) => {
-  const result = await getAllAnnouncements();
+  const userId = req.user._id;
+  const result = await getAllAnnouncements(userId);
 
   switch (result.status) {
     case "SUCCESS":
-      return sendResponse(res, { success: true, data: result.data }, 200);
+      return sendResponse(
+        res,
+        {
+          success: true,
+          message: "Announcements retrieved successfully",
+          data: result.data,
+        },
+        200
+      );
     case "SERVER_ERROR":
       return sendResponse(
         res,
@@ -77,6 +87,41 @@ export const getAnnouncement = async (req, res) => {
   switch (result.status) {
     case "SUCCESS":
       return sendResponse(res, { success: true, data: result.data }, 200);
+    case "NOT_FOUND":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        404
+      );
+    case "SERVER_ERROR":
+      return sendResponse(
+        res,
+        { success: false, message: result.message },
+        500
+      );
+    default:
+      return sendResponse(
+        res,
+        { success: false, message: "Unexpected error" },
+        500
+      );
+  }
+};
+
+export const updateAnnouncdment = async (req, res) => {
+  const result = await announcdmentUpdate(req.params.id, req.body);
+
+  switch (result.status) {
+    case "SUCCESS":
+      return sendResponse(
+        res,
+        {
+          success: true,
+          message: "Announcdment updated successfully",
+          data: result.data,
+        },
+        200
+      );
     case "NOT_FOUND":
       return sendResponse(
         res,

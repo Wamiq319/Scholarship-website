@@ -6,7 +6,7 @@ import { FaEye } from "react-icons/fa";
 
 export const ContactMessagePage = () => {
   const dispatch = useDispatch();
-  const { data: messages, status, error } = useSelector(
+  const { data: messages, status} = useSelector(
     (state) => state.resources
   );
 
@@ -39,9 +39,6 @@ export const ContactMessagePage = () => {
       <h1 className="text-2xl font-bold">Contact Messages</h1>
 
       {status === "loading" && <p>Loading messages...</p>}
-      {status === "failed" && (
-        <p className="text-red-500">Error fetching messages: {error}</p>
-      )}
 
       {status === "succeeded" && (
         <DataTable

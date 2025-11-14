@@ -47,12 +47,11 @@ const InfoBox = ({ label, value }) => (
 
 export const ApplicationsManagementPage = () => {
   const dispatch = useDispatch();
-  const { data, status, error } = useSelector((state) => state.resources);
+  const { data, status } = useSelector((state) => state.resources);
   const [selectedApp, setSelectedApp] = useState(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-  
   useEffect(() => {
     dispatch(fetchResources({ resource: "applications" }));
   }, [dispatch]);
@@ -205,8 +204,6 @@ export const ApplicationsManagementPage = () => {
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           <span className="ml-3 text-gray-600">Loading applications...</span>
         </div>
-      ) : error ? (
-        <p className="text-red-500">{error}</p>
       ) : (
         <DataTable
           heading="All Applications"

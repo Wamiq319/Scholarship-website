@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { ArrowLeft, Menu, X } from "lucide-react";
 import { SidebarMenus } from "@/Data";
 import { Button } from "@/components";
 import Logo from "@/assets/LOGO.png";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchResources } from "@/redux/slices/resourcesSLice";
 
 const Sidebar = ({ role }) => {
+  const dispatch = useDispatch();
+  const { data } = useSelector((state) => state.resources);
+
+  useEffect(() => {
+    dispatch(fetchResources({ resource: "unreadCount" }));
+  }, [dispatch]);
+
+  const counts = data?.unreadCount || {};
+
   const menus = SidebarMenus[role] || [];
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -41,20 +52,35 @@ const Sidebar = ({ role }) => {
 
         {/* Navigation */}
         <nav className="flex-1 space-y-2">
-          {menus.map(({ label, Icon, path }) => (
+          {menus.map(({ label, Icon, path, countKey }) => (
             <NavLink
               key={path}
               to={path}
+              onClick={() => {
+                dispatch(fetchResources({ resource: "unreadCount" }));
+                setIsOpen(false);
+              }}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                `flex items-center justify-between px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                   isActive && window.location.pathname === path
                     ? "bg-yellow-500 text-white shadow-md"
                     : "text-gray-700 hover:bg-yellow-100"
                 }`
               }
             >
-              {Icon && <Icon className="w-5 h-5" />}
-              {label}
+              <div className="flex items-center gap-3 relative">
+                <div className="relative">
+                  {Icon && <Icon className="w-5 h-5" />}
+
+                  {counts[countKey] > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-semibold px-1.5 py-[1px] rounded-full">
+                      {counts[countKey]}
+                    </span>
+                  )}
+                </div>
+
+                {label}
+              </div>
             </NavLink>
           ))}
         </nav>

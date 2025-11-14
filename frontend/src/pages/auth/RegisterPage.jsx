@@ -84,7 +84,7 @@ const RegisterPage = () => {
           {/* Right Column */}
           <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
             <h2 className="text-3xl font-extrabold text-center text-gray-900 mb-8">
-              Register as Student / Committee
+              Register Your Account
             </h2>
 
             <form className="space-y-6" onSubmit={handleSubmit}>

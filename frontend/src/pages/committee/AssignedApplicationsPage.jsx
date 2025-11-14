@@ -2,14 +2,14 @@ import { DataTable } from "@/components";
 import { fetchResources } from "@/redux/slices/resourcesSLice";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FaArrowRight} from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export const AssignedApplicationsPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { data, status, error } = useSelector((state) => state.resources);
+  const { data, status } = useSelector((state) => state.resources);
 
   useEffect(() => {
     dispatch(fetchResources({ resource: "applications" }));
@@ -26,8 +26,6 @@ export const AssignedApplicationsPage = () => {
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           <span className="ml-3 text-gray-600">Loading applications...</span>
         </div>
-      ) : error ? (
-        <p className="text-red-500 text-center mt-5">{error}</p>
       ) : !data.applications?.length ? (
         <p className="text-gray-500 text-center mt-5">
           No assigned applications found.
@@ -36,7 +34,7 @@ export const AssignedApplicationsPage = () => {
         <DataTable
           heading="Assigned Scholarship Applications"
           tableHeader={[
-            { label: "Student Name", key: "studentId.name" },
+            { label: "Student Name", key: "personalInfo.fullName" },
             { label: "Scholarship Title", key: "scholarshipId.title" },
             { label: "Status", key: "status" },
             { label: "Deadline", key: "scholarshipId.deadline" },
@@ -50,7 +48,9 @@ export const AssignedApplicationsPage = () => {
               title: "View Details",
             },
           ]}
-          tableData={data.applications}
+          tableData={data.applications?.filter(
+            (app) => app.status !== "submitted"
+          )}
         />
       )}
     </div>

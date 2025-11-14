@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaTrash, FaPlus, FaEye } from "react-icons/fa";
+import { FaTrash, FaPlus, FaEye, FaEdit } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
@@ -12,17 +12,21 @@ import {
   fetchResources,
   deleteResource,
   createResource,
+  updateResource,
 } from "@/redux/slices/resourcesSLice";
+import toast from "react-hot-toast";
 
 export const AnnouncementManagmentPage = () => {
   const dispatch = useDispatch();
-  const { data, status, error } = useSelector((state) => state.resources);
+  const { data, status } = useSelector((state) => state.resources);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editData, setEditData] = useState(null);
 
   const formId = "announcement-form";
 
@@ -78,13 +82,25 @@ export const AnnouncementManagmentPage = () => {
 
   const confirmDelete = async () => {
     if (deleteId) {
-      await dispatch(
-        deleteResource({ resource: "announcement", id: deleteId })
-      );
+      try {
+        await dispatch(
+          deleteResource({ resource: "announcement", id: deleteId })
+        );
+        toast.success("announcement deleted successfully");
+      } catch (error) {
+        toast.error(error);
+      }
       setDeleteId(null);
       setIsConfirmOpen(false);
       dispatch(fetchResources({ resource: "announcement" }));
     }
+  };
+
+  const handleEdit = (announcement) => {
+    console.log(announcement);
+
+    setEditData(announcement);
+    setIsEditOpen(true);
   };
 
   // Create Logic
@@ -95,18 +111,39 @@ export const AnnouncementManagmentPage = () => {
       type: formData.type,
       scholarshipId: formData.scholarshipId || null,
     };
-    dispatch(createResource({ resource: "announcement", body: payload })).then(
-      () => {
+    try {
+      dispatch(
+        createResource({ resource: "announcement", body: payload })
+      ).then(() => {
         dispatch(fetchResources({ resource: "announcement" }));
         setIsFormOpen(false);
-      }
-    );
+      });
+      toast.success("announcement created successfully");
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   //  View Logic
   const handleView = (announcement) => {
     setSelectedAnnouncement(announcement);
     setIsViewOpen(true);
+  };
+
+  const handleUpdateAnnouncement = async (formData) => {
+    try {
+      await dispatch(
+        updateResource({
+          resource: "announcement",
+          id: editData._id,
+          body: formData,
+        })
+      );
+      toast.success("announcement updated successfully");
+      setIsEditOpen(false);
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   return (
@@ -128,8 +165,6 @@ export const AnnouncementManagmentPage = () => {
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           <span className="ml-3 text-gray-600">Loading announcements...</span>
         </div>
-      ) : error ? (
-        <p className="text-red-500">{error}</p>
       ) : (
         <DataTable
           heading="All Announcements"
@@ -145,6 +180,11 @@ export const AnnouncementManagmentPage = () => {
               icon: <FaEye />,
               className: "bg-green-500 hover:bg-green-600 text-white",
               onClick: (row) => handleView(row),
+            },
+            {
+              icon: <FaEdit />,
+              className: "bg-yellow-500 hover:bg-yellow-600 text-white",
+              onClick: (row) => handleEdit(row),
             },
             {
               icon: <FaTrash />,
@@ -234,6 +274,25 @@ export const AnnouncementManagmentPage = () => {
             No announcement selected.
           </p>
         )}
+      </Modal>
+
+      <Modal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        headerTitle="Edit Announcement"
+        size="lg"
+        formId="edit-announcement-form"
+        primaryActionText="Update"
+        showPrimaryActionButton
+        showSecondaryActionButton
+        onSecondaryAction={() => setIsEditOpen(false)}
+      >
+        <FormModal
+          formId="edit-announcement-form"
+          fields={announcementFields}
+          initialData={editData}
+          onSubmit={handleUpdateAnnouncement}
+        />
       </Modal>
 
       {/*  Delete Confirmation */}

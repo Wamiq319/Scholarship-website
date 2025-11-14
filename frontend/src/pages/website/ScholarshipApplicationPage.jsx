@@ -7,6 +7,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ScholarshipApplicationPage = () => {
   const { id } = useParams();
@@ -65,10 +66,13 @@ const ScholarshipApplicationPage = () => {
     payload.scholarshipType = "Need-based";
     payload._id;
 
-    console.log("Final Payload:", payload);
-
-    // send to backend
-    dispatch(createApplication(payload));
+    try {
+      // send to backend
+      dispatch(createApplication(payload));
+      toast.success("Application submited successfully!");
+    } catch (error) {
+      toast.error(error);
+    }
 
     form.reset();
   };

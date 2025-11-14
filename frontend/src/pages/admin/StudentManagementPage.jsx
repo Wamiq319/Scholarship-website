@@ -22,7 +22,7 @@ export const StudentManagementPage = () => {
   // Edit modal state
   const [selectedStudent, setSelectedStudent] = useState(null);
 
-  const { data, status, error } = useSelector((state) => state.resources);
+  const { data, status } = useSelector((state) => state.resources);
   const users = data?.users;
 
   useEffect(() => {
@@ -82,8 +82,6 @@ export const StudentManagementPage = () => {
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           <span className="ml-3 text-gray-600">Loading students...</span>
         </div>
-      ) : error ? (
-        <p className="text-red-500">{error}</p>
       ) : (
         <DataTable
           heading="All Students"

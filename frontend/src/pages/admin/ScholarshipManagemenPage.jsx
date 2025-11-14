@@ -14,6 +14,7 @@ import {
   createScholarship,
   updateResource,
 } from "@/redux/slices/resourcesSLice";
+import toast from "react-hot-toast";
 
 const scholarshipFields = [
   {
@@ -101,7 +102,7 @@ const scholarshipFields = [
 
 export const ScholarManagementPage = () => {
   const dispatch = useDispatch();
-  const { data, status, error } = useSelector((state) => state.resources);
+  const { data, status} = useSelector((state) => state.resources);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -128,11 +129,16 @@ export const ScholarManagementPage = () => {
 
   const confirmDelete = async () => {
     if (deleteId) {
-      await dispatch(
-        deleteResource({ resource: "scholarships", id: deleteId })
-      );
-      setDeleteId(null);
-      setIsConfirmOpen(false);
+      try {
+        await dispatch(
+          deleteResource({ resource: "scholarships", id: deleteId })
+        );
+        setDeleteId(null);
+        setIsConfirmOpen(false);
+        toast.success("Scholarship deleted successfully!");
+      } catch (error) {
+        toast.error(error);
+      }
     }
   };
 
@@ -177,12 +183,18 @@ export const ScholarManagementPage = () => {
           body: payload,
         })
       ).then(() => {
+        toast.success("Scholarship updated successfully!");
         dispatch(fetchResources({ resource: "scholarships" }));
       });
     } else {
-      dispatch(createScholarship(payload)).then(() => {
-        dispatch(fetchResources({ resource: "scholarships" }));
-      });
+      dispatch(createScholarship(payload))
+        .then(() => {
+          toast.success("Scholarship created successfully!");
+          dispatch(fetchResources({ resource: "scholarships" }));
+        })
+        .catch(() => {
+          toast.error("Failed to create scholarship. Please try again!");
+        });
     }
   };
 
@@ -207,9 +219,7 @@ export const ScholarManagementPage = () => {
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           <span className="ml-3 text-gray-600">Loading scholarships...</span>
         </div>
-      ) : error ? (
-        <p className="text-red-500">{error}</p>
-      ) : (
+      )  : (
         <DataTable
           heading="All Scholarships"
           tableHeader={[

@@ -12,7 +12,7 @@ export const EvaluatedApplicationsPage = () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const id = storedUser ? storedUser._id : null;
 
-  const { data, status, error } = useSelector((state) => state.resources);
+  const { data, status } = useSelector((state) => state.resources);
 
   useEffect(() => {
     if (id) dispatch(fetchEvaluationsByCommitteeMember(id));
@@ -33,23 +33,24 @@ export const EvaluatedApplicationsPage = () => {
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           <span className="ml-3 text-gray-600">Loading evaluations...</span>
         </div>
-      ) : error ? (
-        /* Error */
-        <p className="text-red-500 text-center mt-5">{error}</p>
       ) : !evaluations.length ? (
         /* Empty */
-        <p className="text-gray-500 text-center mt-5">
-          No evaluations found.
-        </p>
+        <p className="text-gray-500 text-center mt-5">No evaluations found.</p>
       ) : (
         /* Data Table */
         <>
           <DataTable
             heading="Evaluated Applications"
             tableHeader={[
-              { label: "Student Name", key: "applicationId.studentId.name" },
-              { label: "Scholarship Title", key: "applicationId.scholarshipId.title" },
-              { label: "Department", key: "applicationId.studentId.department" },
+              { label: "Student Name", key: "applicationId.personalInfo.fullName" },
+              {
+                label: "Scholarship Title",
+                key: "applicationId.scholarshipId.title",
+              },
+              {
+                label: "Department",
+                key: "applicationId.studentId.department",
+              },
               { label: "Status", key: "applicationId.status" },
               { label: "Comment", key: "comments" },
               { label: "Created At", key: "createdAt" },
@@ -89,12 +90,13 @@ export const EvaluatedApplicationsPage = () => {
                     </p>
                     <p>
                       <strong>Email:</strong>{" "}
-                      {selectedEvaluation.applicationId?.studentId?.email || "-"}
+                      {selectedEvaluation.applicationId?.studentId?.email ||
+                        "-"}
                     </p>
                     <p>
                       <strong>Department:</strong>{" "}
-                      {selectedEvaluation.applicationId?.studentId?.department ||
-                        "-"}
+                      {selectedEvaluation.applicationId?.studentId
+                        ?.department || "-"}
                     </p>
                   </div>
                 </div>
@@ -113,8 +115,7 @@ export const EvaluatedApplicationsPage = () => {
                     <p>
                       <strong>Deadline:</strong>{" "}
                       {new Date(
-                        selectedEvaluation.applicationId?.scholarshipId
-                          ?.deadline
+                        selectedEvaluation.applicationId?.scholarshipId?.deadline
                       ).toLocaleDateString()}
                     </p>
                   </div>

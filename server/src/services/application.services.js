@@ -77,7 +77,7 @@ export const applyForScholarship = async (body) => {
 };
 
 // Admin and committee retrieves all applications
-export const getAllApplications = async () => {
+export const getAllApplications = async (userId) => {
   try {
     const applications = await Application.find()
       .populate("studentId", "name email department ")
@@ -95,6 +95,13 @@ export const getAllApplications = async () => {
       evaluationsCount: app.evaluations?.length || 0,
     }));
 
+    for (let ann of applications) {
+      if (!ann.readBy.includes(userId)) {
+        ann.readBy.push(userId);
+        await ann.save({ validateBeforeSave: false });
+      }
+    }
+
     return { status: "SUCCESS", data: appsWithCount };
   } catch (error) {
     return { status: "SERVER_ERROR", message: error.message };
@@ -107,8 +114,7 @@ export const getApplicationById = async (id) => {
     // if id === student id
     let applications = await Application.find({ studentId: id })
       .populate("studentId")
-      .populate("scholarshipId")
-      
+      .populate("scholarshipId");
 
     // if id === aplication id
     if (!applications.length) {

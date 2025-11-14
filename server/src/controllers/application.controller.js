@@ -61,7 +61,10 @@ export const ScholarshipApply = async (req, res) => {
 
 // Admin and committee retrieves all applications
 export const getApplications = async (req, res) => {
-  const result = await getAllApplications();
+const userId = req.user._id;
+
+
+  const result = await getAllApplications(userId);
 
   switch (result.status) {
     case "SUCCESS":

@@ -19,9 +19,17 @@ export const createContact = async (body) => {
   }
 };
 
-export const getContacts = async () => {
+export const getContacts = async (userId) => {
   try {
     const contacts = await Contact.find().sort({ createdAt: -1 });
+
+    for (let ann of contacts) {
+      if (!ann.readBy.includes(userId)) {
+        ann.readBy.push(userId);
+        await ann.save({ validateBeforeSave: false });
+      }
+    }
+
     return {
       status: "SUCCESS",
       data: contacts,

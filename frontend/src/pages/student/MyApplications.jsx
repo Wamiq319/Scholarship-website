@@ -41,7 +41,7 @@ const InfoCard = ({ label, value, badge, fullWidth }) => (
 
 export const MyApplications = () => {
   const dispatch = useDispatch();
-  const { data, status, error } = useSelector((state) => state.resources);
+  const { data, status } = useSelector((state) => state.resources);
 
   const [selectedApp, setSelectedApp] = useState(null);
 
@@ -72,8 +72,6 @@ export const MyApplications = () => {
             Loading applications...
           </span>
         </div>
-      ) : error ? (
-        <p className="text-red-500 text-center mt-5 font-semibold">{error}</p>
       ) : !applications.length ? (
         <p className="text-gray-500 text-center mt-5 font-medium">
           No applications found yet.

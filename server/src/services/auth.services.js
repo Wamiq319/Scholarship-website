@@ -8,6 +8,7 @@ export const registerUser = async (userData) => {
       return { status: "CONFLICT", message: "User already exists" };
     }
 
+
     const user = new User(userData);
     const savedUser = await user.save();
     return { status: "SUCCESS", data: savedUser };
@@ -28,6 +29,7 @@ export const loginUser = async (email, password) => {
     if (user.password !== password) {
       return { status: "UNAUTHORIZED", message: "Invalid credentials" };
     }
+    
 
     if (!user.isActive) {
       return { status: "FORBIDDEN", message: "Account is deactivated" };

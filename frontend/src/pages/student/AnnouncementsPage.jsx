@@ -4,7 +4,7 @@ import { fetchResources } from "@/redux/slices/resourcesSLice";
 
 export const AnnouncementsPage = () => {
   const dispatch = useDispatch();
-  const { data, status, error } = useSelector((state) => state.resources);
+  const { data, status } = useSelector((state) => state.resources);
   const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => {
@@ -52,9 +52,6 @@ export const AnnouncementsPage = () => {
     );
   }
 
-  if (error) {
-    return <p className="text-red-500 text-center py-10">{error}</p>;
-  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">

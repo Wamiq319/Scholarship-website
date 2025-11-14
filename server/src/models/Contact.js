@@ -18,12 +18,16 @@ const contactSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    readBy: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "User", default: [] },
+    ],
     message: {
       type: String,
       required: true,
       trim: true,
     },
   },
+
   { timestamps: true }
 );
 

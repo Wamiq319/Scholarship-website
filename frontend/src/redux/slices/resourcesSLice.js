@@ -248,7 +248,6 @@ const resourcesSlice = createSlice({
         state.error = action.payload;
       })
 
-
       // --- Login ---
       .addCase(login.fulfilled, (state, action) => {
         state.admin = action.payload.data;

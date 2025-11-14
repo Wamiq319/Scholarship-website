@@ -15,7 +15,7 @@ import { fetchResources } from "@/redux/slices/resourcesSLice";
 
 export const CommitteeDashboard = () => {
   const dispatch = useDispatch();
-  const { data, status, error } = useSelector((state) => state.resources);
+  const { data, status } = useSelector((state) => state.resources);
   const [committeeMember, setCommitteeMember] = useState(null);
 
   useEffect(() => {
@@ -42,12 +42,10 @@ export const CommitteeDashboard = () => {
     );
   }, [evaluations, committeeMember]);
 
-const Pending = useMemo(()=>{
-  if(!applications) return null;
-  return applications.filter(
-    (apps)=> apps.status==="under_review"
-  )
-},[applications])
+  const Pending = useMemo(() => {
+    if (!applications) return null;
+    return applications.filter((apps) => apps.status === "under_review");
+  }, [applications]);
 
   const evaluatedApps = myEvaluations.map((e) => e.applicationId);
   const totalAssigned = applications.length;
@@ -82,13 +80,6 @@ const Pending = useMemo(()=>{
       <div className="flex justify-center py-10">
         <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
         <span className="ml-3 text-gray-600">Loading dashboard...</span>
-      </div>
-    );
-
-  if (error)
-    return (
-      <div className="text-center text-red-500 mt-10">
-        Failed to load data. Please try again.
       </div>
     );
 

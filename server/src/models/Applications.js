@@ -50,7 +50,7 @@ const applicationSchema = new mongoose.Schema(
       cnic: { type: String, required: true, trim: true },
       gender: { type: String, enum: ["male", "female", "other"] },
       dateOfBirth: { type: Date },
-      maritalStatus: { type: String }, 
+      maritalStatus: { type: String },
       domicile: {
         province: String,
         district: String,
@@ -184,6 +184,9 @@ const applicationSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    readBy: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "User", default: [] },
+    ],
     tracking: [
       {
         stage: String, // e.g. "submitted", "verified", "approved"

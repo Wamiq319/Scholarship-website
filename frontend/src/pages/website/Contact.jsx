@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Navbar, Footer, InputField, Button } from "../../components";
-import { Mail, Phone, Facebook, Twitter, Linkedin } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  Facebook,
+  Twitter,
+  Linkedin,
+  CheckCircle,
+} from "lucide-react";
 import { createResource } from "@/redux/slices/resourcesSLice";
+import toast from "react-hot-toast";
 
 const Contact = () => {
   const dispatch = useDispatch();
@@ -13,8 +21,8 @@ const Contact = () => {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-
-  const handleSubmit = (e) => {
+  const [successMessage, setSuccessMessage] = useState("");
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!fullName || !email || !message) {
@@ -24,17 +32,25 @@ const Contact = () => {
 
     setError("");
 
-    dispatch(
-      createResource({
-        resource: "contact",
-        body: { fullName, email, subject, message },
-      })
-    );
+    try {
+      await dispatch(
+        createResource({
+          resource: "contact",
+          body: { fullName, email, subject, message },
+        })
+      );
 
-    setFullName("");
-    setEmail("");
-    setSubject("");
-    setMessage("");
+      setSuccessMessage("Your message has been sent successfully!");
+      setFullName("");
+      setEmail("");
+      setSubject("");
+      setMessage("");
+      toast.success("Your message has been sent successfully!");
+      setTimeout(() => setSuccessMessage(""), 10000);
+    } catch (err) {
+      toast.error("Something went wrong. Please try again!");
+      setError("Something went wrong. Please try again.", err);
+    }
   };
 
   return (
@@ -105,6 +121,12 @@ const Contact = () => {
             />
 
             {error && <p className="text-red-500">{error}</p>}
+            {successMessage && (
+              <p className="flex items-center gap-2 text-green-600 font-medium">
+                <CheckCircle className="w-5 h-5 text-green-600" />
+                {successMessage}
+              </p>
+            )}
 
             <Button
               type="submit"

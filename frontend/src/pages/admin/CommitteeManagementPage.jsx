@@ -22,7 +22,7 @@ export const CommitteeManagementPage = () => {
 
   const formId = "create-committee-form";
 
-  const { data, status, error } = useSelector((state) => state.resources);
+  const { data, status} = useSelector((state) => state.resources);
 
   console.log(data);
   
@@ -65,7 +65,7 @@ export const CommitteeManagementPage = () => {
 
   // handle form submit
   const handleSubmit = async (formData) => {
-    const payload = { ...formData, role: "COMMITTEE" };
+    const payload = { ...formData, role: "COMMITTEE" }; 
 
     if (status === "loading") return;
 
@@ -97,8 +97,6 @@ export const CommitteeManagementPage = () => {
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           <span className="ml-3 text-gray-600">Loading committee members...</span>
         </div>
-      ) : error ? (
-        <p className="text-red-500">{error}</p>
       ) : (
         <DataTable
           heading="All Committee Members"

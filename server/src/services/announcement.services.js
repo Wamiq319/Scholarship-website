@@ -27,11 +27,18 @@ export const createAnnouncements = async (body) => {
 };
 
 //  Get All Announcements
-export const getAllAnnouncements = async () => {
+export const getAllAnnouncements = async (userId) => {
   try {
     const announcements = await Announcement.find()
       .populate("scholarshipId", "title")
       .sort({ createdAt: -1 });
+
+    for (let ann of announcements) {
+      if (!ann.readBy.includes(userId)) {
+        ann.readBy.push(userId);
+        await ann.save();
+      }
+    }
 
     return {
       status: "SUCCESS",
@@ -70,6 +77,33 @@ export const getAnnouncementById = async (id) => {
     return {
       status: "SERVER_ERROR",
       message: "Failed to fetch announcement",
+    };
+  }
+};
+
+export const announcdmentUpdate = async (id, body) => {
+  try {
+    const updated = await Announcement.findByIdAndUpdate(id, body, {
+      new: true,
+      runValidators: true,
+    }).populate("scholarshipId", "title");
+
+    if (!updated) {
+      return {
+        status: "NOT_FOUND",
+        message: "Announcement not found",
+      };
+    }
+
+    return {
+      status: "SUCCESS",
+      data: updated,
+    };
+  } catch (error) {
+    console.error("Error updating announcement:", error);
+    return {
+      status: "SERVER_ERROR",
+      message: "Failed to update announcement",
     };
   }
 };

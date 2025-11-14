@@ -5,3 +5,4 @@ export { default as applicationRoutes } from "./application.route.js";
 export { default as evaluationRoutes } from "./evaluation.route.js";
 export { default as announcementRoutes } from "./announcement.route.js";
 export { default as contactRoutes } from "./contact.route.js";
+export { default as unreadRoutes } from "./unread.route.js";

@@ -33,7 +33,7 @@ import { fetchResources } from "@/redux/slices/resourcesSLice";
 
 export const AdminDashboard = () => {
   const dispatch = useDispatch();
-  const { data, status, error } = useSelector((state) => state.resources);
+  const { data, status} = useSelector((state) => state.resources);
 
   useEffect(() => {
     const resources = ["applications", "scholarships", "users", "evaluations"];
@@ -130,12 +130,6 @@ export const AdminDashboard = () => {
       <div className="flex justify-center py-10">
         <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
         <span className="ml-3 text-gray-600">Loading applications...</span>
-      </div>
-    );
-  if (error)
-    return (
-      <div className="text-center text-red-500 mt-10">
-        Failed to load data. Please try again.
       </div>
     );
 
