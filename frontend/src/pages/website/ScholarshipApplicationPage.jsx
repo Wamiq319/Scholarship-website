@@ -54,27 +54,20 @@ const ScholarshipApplicationPage = () => {
     return result;
   }
 
-  const handleFormSubmit = (form) => {
+  const handleFormSubmit = async (form) => {
     const studentId = storedUser._id;
 
-    // convert form data to nested object
     const payload = unflattenObject(form);
-
-    // add additional fields
     payload.studentId = studentId;
     payload.scholarshipId = _id;
     payload.scholarshipType = "Need-based";
-    payload._id;
 
     try {
-      // send to backend
-      dispatch(createApplication(payload));
-      toast.success("Application submited successfully!");
+      await dispatch(createApplication(payload)).unwrap();
+      toast.success("Application submitted successfully!");
     } catch (error) {
-      toast.error(error);
+      toast.error(error.message || "Something went wrong!");
     }
-
-    form.reset();
   };
 
   const commonFields = [
@@ -223,6 +216,7 @@ const ScholarshipApplicationPage = () => {
       name: "academicInfo.previousEducation",
       label: "Previous Education",
       type: "table",
+      required: true,
       columns: [
         { key: "level", label: "Level" },
         { key: "institute", label: "Institute" },
