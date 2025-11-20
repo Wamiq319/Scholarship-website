@@ -1,5 +1,5 @@
 import { Application } from "../models/index.js";
-import cloudinary from "../utils/cloudinary.config.js";
+import { uploadToCloudinary } from "../utils/index.js";
 
 // Student applies for a scholarship
 export const applyForScholarship = async (body) => {
@@ -36,9 +36,10 @@ export const applyForScholarship = async (body) => {
       for (const key in documents) {
         const file = documents[key];
         if (!file) continue;
+
         try {
-          const uploadRes = await cloudinary.uploader.upload(file);
-          uploadedDocs[key] = uploadRes.secure_url;
+          const { url } = await uploadToCloudinary(file);
+          uploadedDocs[key] = url;
         } catch (err) {
           return {
             status: "UPLOAD_ERROR",
