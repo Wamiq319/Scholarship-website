@@ -3,8 +3,7 @@ import { generateToken, sendResponse } from "../utils/index.js";
 
 // REGISTER CONTROLLER
 export const register = async (req, res) => {
-  const { name, email, password, role, department, studentId, profile } =
-    req.body;
+  const { name, email, password, role, department, profile } = req.body;
 
   if (!name || !email || !password || !role)
     return sendResponse(
@@ -19,7 +18,6 @@ export const register = async (req, res) => {
     password,
     role,
     department,
-    studentId,
     profile,
   });
 

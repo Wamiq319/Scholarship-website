@@ -15,12 +15,8 @@ const RegisterPage = () => {
     confirmPassword: "",
     role: "STUDENT",
     department: "",
-    studentId: "",
     profile: {
       phone: "",
-      address: "",
-      cgpa: "",
-      familyIncome: "",
     },
   });
 
@@ -138,48 +134,12 @@ const RegisterPage = () => {
               />
 
               <InputField
-                label="StudentId"
-                name="studentId"
-                type="text"
-                value={formData.rollNo}
-                onChange={handleChange}
-                placeholder="Enter your roll number"
-              />
-
-              <InputField
                 label="Phone Number"
                 name="profile.phone"
                 type="text"
                 value={formData.profile.phone}
                 onChange={handleChange}
                 placeholder="Enter your phone number"
-              />
-
-              <InputField
-                label="Address"
-                name="profile.address"
-                type="text"
-                value={formData.profile.address}
-                onChange={handleChange}
-                placeholder="Enter your address"
-              />
-
-              <InputField
-                label="CGPA"
-                name="profile.cgpa"
-                type="number"
-                value={formData.profile.gpa}
-                onChange={handleChange}
-                placeholder="Enter your GPA"
-              />
-
-              <InputField
-                label="Family Income"
-                name="profile.familyIncome"
-                type="number"
-                value={formData.profile.familyIncome}
-                onChange={handleChange}
-                placeholder="Enter family income"
               />
 
               <Button
