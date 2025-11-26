@@ -77,8 +77,9 @@ const applicationSchema = new mongoose.Schema(
         {
           level: String, // Matric, Inter, Bachelor
           institute: String,
-          marksOrCGPA: String,
           year: String,
+          totalMarks: String,
+          obtainedMarks: String,
         },
       ],
     },

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Button, FormModal } from "@/components";
+import { Button, DataTable, FormModal } from "@/components";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,7 +14,6 @@ export const ApplicationEvaluationPage = () => {
   const { data, status } = useSelector((state) => state.resources);
   const application = data.applicationsById;
 
-  
   useEffect(() => {
     if (id) dispatch(fetchResourceById({ resource: "applications", id }));
   }, [id, dispatch]);
@@ -195,28 +194,19 @@ export const ApplicationEvaluationPage = () => {
         />
         {academicInfo?.previousEducation?.length > 0 && (
           <div className="mt-4">
-            <p className="font-medium text-gray-700 mb-2">Previous Education</p>
-            <div className="border rounded-lg overflow-hidden">
-              <table className="w-full text-sm text-left">
-                <thead className="bg-gray-50 text-gray-700">
-                  <tr>
-                    <th className="px-3 py-2">Level</th>
-                    <th className="px-3 py-2">Institute</th>
-                    <th className="px-3 py-2">Marks/CGPA</th>
-                    <th className="px-3 py-2">Year</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {academicInfo.previousEducation.map((edu, i) => (
-                    <tr key={i} className="border-t">
-                      <td className="px-3 py-2">{edu.level}</td>
-                      <td className="px-3 py-2">{edu.institute}</td>
-                      <td className="px-3 py-2">{edu.marksOrCGPA}</td>
-                      <td className="px-3 py-2">{edu.year}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            {/* Previous Education - Using DataTable */}
+            <div className="mt-6">
+              <DataTable
+                heading="Previous Education"
+                tableHeader={[
+                  { key: "level", label: "Level" },
+                  { key: "institute", label: "Institute" },
+                  { key: "totalMarks", label: "Total Marks" },
+                  { key: "obtainedMarks", label: "Obtained Marks" },
+                  { key: "year", label: "Year" },
+                ]}
+                tableData={academicInfo?.previousEducation || []}
+              />
             </div>
           </div>
         )}

@@ -413,7 +413,8 @@ export const ApplicationsManagementPage = () => {
                     tableHeader={[
                       { key: "level", label: "Level" },
                       { key: "institute", label: "Institute" },
-                      { key: "marksOrCGPA", label: "Marks/CGPA" },
+                      { key: "totalMarks", label: "Total Marks" },
+                       { key: "obtainedMarks", label: "Obtained Marks" }, 
                       { key: "year", label: "Year" },
                     ]}
                     tableData={

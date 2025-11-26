@@ -60,7 +60,7 @@ const ScholarshipApplicationPage = () => {
     const payload = unflattenObject(form);
     payload.studentId = studentId;
     payload.scholarshipId = _id;
-    payload.scholarshipType = "Need-based";
+    payload.scholarshipType = category;
 
     try {
       await dispatch(createApplication(payload)).unwrap();
@@ -218,10 +218,11 @@ const ScholarshipApplicationPage = () => {
       type: "table",
       required: true,
       columns: [
-        { key: "level", label: "Level" },
+        { key: "level", label: "Level" }, // Matric / Inter / Bachelor
         { key: "institute", label: "Institute" },
-        { key: "marksOrCGPA", label: "Marks / CGPA" },
         { key: "year", label: "Year" },
+        { key: "totalMarks", label: "Total Marks" },
+        { key: "obtainedMarks", label: "Obtained Marks" },
       ],
       placeholder: "Add your previous education record",
     },

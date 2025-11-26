@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DataTable, Modal } from "@/components";
 import { FaEye } from "react-icons/fa";
-import {
-  fetchApplicationsById,
-} from "@/redux/slices/resourcesSLice";
+import { fetchApplicationsById } from "@/redux/slices/resourcesSLice";
 
 const Section = ({ title, children }) => (
   <section className="mb-10">
@@ -58,7 +56,6 @@ export const MyApplications = () => {
   }, [dispatch, studentId]);
 
   const handleView = (row) => setSelectedApp(row);
-
 
   const applications = data?.applicationsById || [];
 
@@ -267,8 +264,9 @@ export const MyApplications = () => {
                     tableHeader={[
                       { key: "level", label: "Level" },
                       { key: "institute", label: "Institute" },
-                      { key: "marksOrCGPA", label: "Marks / CGPA" },
                       { key: "year", label: "Year" },
+                      { key: "totalMarks", label: "Total Marks" },  
+                      { key: "obtainedMarks", label: "Obtained Marks" }, 
                     ]}
                     tableData={
                       selectedApp?.academicInfo?.previousEducation || []
