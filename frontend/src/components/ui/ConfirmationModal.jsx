@@ -1,13 +1,21 @@
 import React from "react";
 import { Button } from "@/components";
 
-const ConfirmationModal = ({ isOpen, onClose, onConfirm, message }) => {
+const ConfirmationModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  confirmLabel,
+  message,
+}) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
-        <h2 className="text-lg font-semibold text-gray-800 mb-3">Confirm Action</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-3">
+          Confirm Action
+        </h2>
         <p className="text-gray-600 mb-6">{message}</p>
 
         <div className="flex justify-end gap-3">
@@ -22,7 +30,7 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, message }) => {
             variant="filled"
             color="red"
           >
-            Delete
+            {confirmLabel || "Delete"}
           </Button>
         </div>
       </div>

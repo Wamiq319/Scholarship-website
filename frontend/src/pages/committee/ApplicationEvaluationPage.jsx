@@ -11,6 +11,7 @@ export const ApplicationEvaluationPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [formData, setFormData] = useState(null);
 
   const dispatch = useDispatch();
   const { data, status } = useSelector((state) => state.resources);
@@ -80,7 +81,7 @@ export const ApplicationEvaluationPage = () => {
     },
   ];
 
-  const handleSubmitEvaluation = (formData) => {
+  const handleSubmitEvaluation = () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     const payload = {
       scores: {
@@ -92,11 +93,17 @@ export const ApplicationEvaluationPage = () => {
       applicationId: id,
       comments: formData.comments,
     };
-    dispatch(createEvaluation(payload));
+
+    try {
+      dispatch(createEvaluation(payload));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleOpenConfirm = () => {
+  const handleOpenConfirm = (formData) => {
     setIsConfirmOpen(true);
+    setFormData(formData);
   };
 
   return (
@@ -398,6 +405,7 @@ export const ApplicationEvaluationPage = () => {
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={handleSubmitEvaluation}
+        confirmLabel="Submit Evaluation"
         message="Are you sure you want to evaluate this application?"
       />
     </div>
