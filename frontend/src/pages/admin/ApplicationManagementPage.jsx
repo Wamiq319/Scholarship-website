@@ -116,98 +116,98 @@ export const ApplicationsManagementPage = () => {
 
   const handleView = (row) => setSelectedApp(row);
 
+  const getTooltipButton = (iconComponent, tooltipText, onClick, btnClass) => ({
+    icon: (
+      <div className="relative group">
+        {iconComponent}
+        <span className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+          {tooltipText}
+        </span>
+      </div>
+    ),
+    className: btnClass,
+    onClick,
+  });
+
   const getButtonsByStatus = (row) => {
     const status = row.status?.toLowerCase();
 
     if (status === "submitted") {
       return [
-        {
-          icon: <FaEye />,
-          className: "bg-blue-500 hover:bg-blue-600 text-white",
-          onClick: handleView,
-          title: "View",
-        },
-        {
-          icon: <FaUserPlus />,
-          className: "bg-indigo-500 hover:bg-indigo-600 text-white",
-          onClick: handleAssign,
-          title: "Assign to Committee",
-        },
+        getTooltipButton(
+          <FaEye />,
+          "View Application",
+          handleView,
+          "bg-blue-500 hover:bg-blue-600 text-white shadow-md"
+        ),
+        getTooltipButton(
+          <FaUserPlus />,
+          "Assign to Committee",
+          handleAssign,
+          "bg-indigo-500 hover:bg-indigo-600 text-white"
+        ),
       ];
     }
 
     if (status === "under_review") {
       return [
-        {
-          icon: (
-            <div className="relative group">
-              <FaEye />
-              {/* Tooltip */}
-              <span className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                View Application
-              </span>
-            </div>
-          ),
-          className: "bg-blue-500 hover:bg-blue-600 text-white shadow-md",
-          onClick: handleView,
-        },
+        getTooltipButton(
+          <FaEye />,
+          "View Application",
+          handleView,
+          "bg-blue-500 hover:bg-blue-600 text-white shadow-md"
+        ),
       ];
     }
 
     if (status === "rejected") {
       return [
-        {
-          icon: <FaTrash />,
-          className: "bg-red-600 hover:bg-red-700 text-white",
-          onClick: handleDelete,
-          title: "Delete",
-        },
+        getTooltipButton(
+          <FaTrash />,
+          "Delete Application",
+          handleDelete,
+          "bg-red-600 hover:bg-red-700 text-white"
+        ),
       ];
     }
 
     if (status === "evaluated") {
       return [
-        {
-          icon: (
-            <div className="relative group">
-              <FaEye />
-              {/* Tooltip */}
-              <span className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                View Application
-              </span>
-            </div>
-          ),
-          className: "bg-blue-500 hover:bg-blue-600 text-white shadow-md",
-          onClick: handleView,
-        },
-        {
-          icon: <FaCheck />,
-          className: "bg-green-500 hover:bg-green-600 text-white",
-          onClick: handleApprove,
-          title: "Approve",
-        },
-        {
-          icon: <FaTimes />,
-          className: "bg-red-500 hover:bg-red-600 text-white",
-          onClick: handleReject,
-          title: "Reject",
-        },
+        getTooltipButton(
+          <FaEye />,
+          "View Application",
+          handleView,
+          "bg-blue-500 hover:bg-blue-600 text-white shadow-md"
+        ),
+        getTooltipButton(
+          <FaCheck />,
+          "Approve Application",
+          handleApprove,
+          "bg-green-500 hover:bg-green-600 text-white"
+        ),
+        getTooltipButton(
+          <FaTimes />,
+          "Reject Application",
+          handleReject,
+          "bg-red-500 hover:bg-red-600 text-white"
+        ),
       ];
     }
 
+    // Default fallback buttons
     return [
-      {
-        icon: <FaEye />,
-        className: "bg-blue-500 hover:bg-blue-600 text-white",
-        onClick: handleView,
-        title: "View",
-      },
-      {
-        icon: <FaTrash />,
-        className: "bg-red-600 hover:bg-red-700 text-white",
-        onClick: handleDelete,
-        title: "Delete",
-      },
+      getTooltipButton(
+        <FaEye />,
+        "View Application",
+        handleView,
+        "bg-blue-500 hover:bg-blue-600 text-white shadow-md"
+      ),
+      getTooltipButton(
+        <FaTrash />,
+        "Delete Application",
+        handleDelete,
+        "bg-red-600 hover:bg-red-700 text-white"
+      ),
     ];
   };
 
