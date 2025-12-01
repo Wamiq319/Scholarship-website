@@ -100,6 +100,7 @@ export const ApplicationEvaluationPage = () => {
       toast.success("Evaluation submitted successfully.");
       navigate(-1);
     } catch (error) {
+      toast.error("Failed to submit evaluation. Please try again.");
       console.log(error);
     }
   };
