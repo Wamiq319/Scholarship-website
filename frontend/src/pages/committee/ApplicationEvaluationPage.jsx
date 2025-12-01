@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Button, DataTable, FormModal } from "@/components";
+import React, { useEffect, useState } from "react";
+import { Button, ConfirmationModal, DataTable, FormModal } from "@/components";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,6 +10,8 @@ import {
 export const ApplicationEvaluationPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
   const dispatch = useDispatch();
   const { data, status } = useSelector((state) => state.resources);
   const application = data.applicationsById;
@@ -30,7 +32,7 @@ export const ApplicationEvaluationPage = () => {
       <div className="p-6 text-center text-red-500">
         Failed to load application details.
       </div>
-    ); 
+    );
 
   const {
     scholarshipId: scholarship,
@@ -91,6 +93,10 @@ export const ApplicationEvaluationPage = () => {
       comments: formData.comments,
     };
     dispatch(createEvaluation(payload));
+  };
+
+  const handleOpenConfirm = () => {
+    setIsConfirmOpen(true);
   };
 
   return (
@@ -374,7 +380,7 @@ export const ApplicationEvaluationPage = () => {
         <FormModal
           formId="evaluation-form"
           fields={fields}
-          onSubmit={handleSubmitEvaluation}
+          onSubmit={handleOpenConfirm}
         >
           <div className="mt-6 flex justify-end">
             <Button
@@ -388,6 +394,12 @@ export const ApplicationEvaluationPage = () => {
           </div>
         </FormModal>
       </Section>
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={handleSubmitEvaluation}
+        message="Are you sure you want to evaluate this application?"
+      />
     </div>
   );
 };
