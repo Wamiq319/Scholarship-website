@@ -30,7 +30,7 @@ export const ApplicationEvaluationPage = () => {
       <div className="p-6 text-center text-red-500">
         Failed to load application details.
       </div>
-    );
+    ); 
 
   const {
     scholarshipId: scholarship,
@@ -69,7 +69,7 @@ export const ApplicationEvaluationPage = () => {
       required: true,
     },
     {
-      label: "Comments / Remarks",
+      label: "Comments/ remarks/ correction details",
       name: "comments",
       type: "textarea",
       placeholder: "Write your evaluation notes...",

@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Navbar, Footer } from "../../components";
 import {
   Hero,
@@ -7,8 +7,11 @@ import {
   WhyChooseUs,
   Testimonials,
 } from "@/sections";
-import {CTA}from "@/components"
+import { CTA } from "@/components";
+import Announcements from "@/sections/home/Announcements";
 
+
+const LandingPage = () => {
  const ctaData = {
     title: "Ready to Find Your Scholarship?",
     description:
@@ -22,12 +25,12 @@ import {CTA}from "@/components"
     rounded: true,
   };
 
-const LandingPage = () => {
   return (
     <div>
       <Navbar />
       <Hero />
       <FeaturedScholarships />
+      <Announcements/>
       <Process />
       <WhyChooseUs />
       <Testimonials />

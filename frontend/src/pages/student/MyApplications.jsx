@@ -88,7 +88,7 @@ export const MyApplications = () => {
               onClick: handleView,
               title: "View",
             },
-          ]}
+          ]} 
           tableData={applications}
         />
       )}
