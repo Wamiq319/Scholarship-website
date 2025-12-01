@@ -139,10 +139,17 @@ export const ApplicationsManagementPage = () => {
     if (status === "under_review") {
       return [
         {
-          icon: <FaEye />,
-          className: "bg-blue-500 hover:bg-blue-600 text-white",
+          icon: (
+            <div className="relative group">
+              <FaEye />
+              {/* Tooltip */}
+              <span className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                View Application
+              </span>
+            </div>
+          ),
+          className: "bg-blue-500 hover:bg-blue-600 text-white shadow-md",
           onClick: handleView,
-          title: "View",
         },
       ];
     }
@@ -414,7 +421,7 @@ export const ApplicationsManagementPage = () => {
                       { key: "level", label: "Level" },
                       { key: "institute", label: "Institute" },
                       { key: "totalMarks", label: "Total Marks" },
-                       { key: "obtainedMarks", label: "Obtained Marks" }, 
+                      { key: "obtainedMarks", label: "Obtained Marks" },
                       { key: "year", label: "Year" },
                     ]}
                     tableData={
