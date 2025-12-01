@@ -6,6 +6,7 @@ import {
   createEvaluation,
   fetchResourceById,
 } from "@/redux/slices/resourcesSLice";
+import toast from "react-hot-toast";
 
 export const ApplicationEvaluationPage = () => {
   const { id } = useParams();
@@ -81,7 +82,7 @@ export const ApplicationEvaluationPage = () => {
     },
   ];
 
-  const handleSubmitEvaluation = () => {
+  const handleSubmitEvaluation = async () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     const payload = {
       scores: {
@@ -95,7 +96,9 @@ export const ApplicationEvaluationPage = () => {
     };
 
     try {
-      dispatch(createEvaluation(payload));
+      await dispatch(createEvaluation(payload));
+      toast.success("Evaluation submitted successfully.");
+      navigate(-1);
     } catch (error) {
       console.log(error);
     }
